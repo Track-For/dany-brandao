@@ -11,13 +11,13 @@ const method = [
   { number: "01", title: "Marca", copy: "O que precisa permanecer reconhecível em qualquer expressão dessa empresa?", image: "/images/Logo Premium.png", alt: "Assinatura oficial Premium da marca Dany Brandão", logo: true },
   { number: "02", title: "Produto", copy: "O que está sendo apresentado, celebrado ou comunicado?", image: "/media/detail-material.jpg", alt: "Equipamentos e materiais preparados para uma experiência" },
   { number: "03", title: "Público", copy: "Quem estará presente e o que essas pessoas precisam perceber?", image: "/media/detail-arrival.jpg", alt: "Equipe recebendo convidados em um evento corporativo" },
-  { number: "04", title: "Contexto", copy: "Por que esse encontro existe e que momento da marca ele representa?", image: "/media/detail-architecture.jpg", alt: "Detalhe arquitetônico observado durante a preparação de um evento" },
+  { number: "04", title: "Contexto", copy: "Por que esse encontro existe e que momento da marca ele representa?", image: "/media/crachas.png", alt: "Detalhe arquitetônico observado durante a preparação de um evento" },
   { number: "05", title: "Experiência", copy: "Como transformar estratégia em ambiente, hospitalidade, ritmo e detalhe?", image: "/media/detail-audience.jpg", alt: "Convidados reunidos durante uma experiência corporativa" },
-  { number: "06", title: "Execução", copy: "Como coordenar a complexidade sem transferi-la para o cliente?", image: "/media/detail-assembly.jpg", alt: "Equipe técnica trabalhando na montagem de uma experiência" },
+  { number: "06", title: "Execução", copy: "Como coordenar a complexidade sem transferi-la para o cliente?", image: "/media/Dany e flores.png", alt: "Equipe técnica trabalhando na montagem de uma experiência" },
 ];
 
 const showcases = [
-  { number: "01 / 03", title: "Jantar executivo", image: "/images/project-dinner.png", alt: "Convidados reunidos em um jantar executivo", scope: ["Hospitality", "Guest flow", "Production"] },
+  { number: "01 / 03", title: "Jantar executivo", image: "/images/jantar.png", alt: "Convidados reunidos em um jantar executivo", scope: ["Hospitality", "Guest flow", "Production"] },
   { number: "02 / 03", title: "Plenária corporativa", image: "/images/project-plenary.png", alt: "Plenária corporativa pronta para receber o público", scope: ["Stage", "Content", "Operation"] },
   { number: "03 / 03", title: "Recepção e RSVP", image: "/images/project-rsvp.png", alt: "Equipe organizando recepção e credenciamento", scope: ["RSVP", "Reception", "Detail"] },
 ];
@@ -45,12 +45,12 @@ const systemSteps = ["Briefing", "RSVP", "Fornecedores", "Credenciamento", "Hosp
 const complexity = ["RSVP", "Logística", "Produção", "Montagem", "Credenciamento", "Fornecedores", "Cronograma", "Hospitalidade", "Operação", "Imprevistos"];
 
 const heroMoments = [
-  "A marca dá o tom.",
-  "A chegada cria presença.",
-  "O cuidado muda o ritmo.",
-  "Cada detalhe comunica.",
-  "A experiência faz sentir.",
-  "Tudo começa pela escuta.",
+  "A marca dá o tom",
+  "A chegada cria presença",
+  "O cuidado muda o ritmo",
+  "Cada detalhe comunica",
+  "A experiência faz sentir",
+  "Tudo começa pela escuta",
 ];
 
 const organizationJsonLd = {
@@ -133,7 +133,7 @@ export default function Home() {
                   <p className="language-panel__index">01 / Clássico</p>
                   <h2 id="language-title"><span>Clássico</span> não é parado</h2>
                   <p className="language-panel__lead">É saber o que deve permanecer</p>
-                  <figure className="language-panel__classic-media" data-language-media><Image src="/media/detail-architecture.jpg" alt="Detalhe clássico de arquitetura observado em um projeto real" fill sizes="(max-width: 1023px) 74vw, 38vw" className="cover-image" /></figure>
+                  <figure className="language-panel__classic-media" data-language-media><Image src="/media/saxofone.png" alt="Detalhe clássico de arquitetura observado em um projeto real" fill sizes="(max-width: 1023px) 74vw, 38vw" className="cover-image" /></figure>
                 </article>
 
                 <article className="language-panel language-panel--transform" data-language-panel>
@@ -198,23 +198,23 @@ export default function Home() {
                 </header>
                 <article className="details__panel details__panel--direction">
                   <figure className="details__curtain" data-detail-curtain data-cursor="DETAIL"><Image src="/media/detail-direction.jpg" alt="Dany orientando a preparação de um ambiente" fill sizes="(max-width: 1023px) 100vw, 72vw" className="cover-image" /></figure>
-                  <p>Direção antes da chegada.</p>
+                  <p>Direção antes da chegada</p>
                 </article>
                 <article className="details__panel details__panel--reel">
                   <div className="details__curtain" data-detail-curtain>
                     <VerticalFilm src="/media/hero-production.mp4" poster="/media/hero-production-poster.jpg" label="Reel 01" caption="Bastidores reais" objectPosition="center 44%" className="details__film" ariaLabel="Reel 1 com bastidores da produção de uma experiência corporativa" />
                   </div>
-                  <p>O cuidado aparece no que o cliente nem precisa acompanhar.</p>
+                  <p>O cuidado aparece no que o cliente nem precisa acompanhar</p>
                 </article>
                 <article className="details__panel details__panel--context">
-                  <figure className="details__curtain" data-detail-curtain data-cursor="DETAIL"><Image src="/media/detail-architecture.jpg" alt="Vitral e textura arquitetônica do espaço" fill sizes="(max-width: 1023px) 100vw, 62vw" className="cover-image" /></figure>
-                  <p>Cada lugar pede uma leitura.</p>
+                  <figure className="details__curtain" data-detail-curtain data-cursor="DETAIL"><Image src="/media/Leitura do Lugar.png" alt="Vitral e textura arquitetônica do espaço" fill sizes="(max-width: 1023px) 100vw, 62vw" className="cover-image" /></figure>
+                  <p>Cada lugar pede uma leitura</p>
                 </article>
                 <article className="details__panel details__panel--operation">
                   <div className="details__curtain" data-detail-curtain>
                     <VerticalFilm src="/media/manifesto-event.mp4" poster="/media/manifesto-event-poster.jpg" label="Operação" caption="Do primeiro contato ao último detalhe" objectPosition="center 44%" className="details__film" ariaLabel="Operação de uma experiência corporativa real" />
                   </div>
-                  <p>Ritmo, textura, hospitalidade e operação fazem parte da mesma decisão.</p>
+                  <p>Ritmo, textura, hospitalidade e operação fazem parte da mesma decisão</p>
                 </article>
               </div>
               <div className="details__progress" aria-hidden="true"><span data-details-progress /></div>
@@ -223,7 +223,7 @@ export default function Home() {
 
           <section className="showcase" id="experiencias" aria-labelledby="showcase-title">
             <div className="showcase__pin" data-showcase-pin>
-              <header className="container showcase__header"><p>Experiências reais / sem exposição indevida</p><h2 id="showcase-title">Experiências, sem precisar contar tudo.</h2></header>
+              <header className="container showcase__header"><p>Experiências reais / sem exposição indevida</p><h2 id="showcase-title">Experiências, sem precisar contar tudo</h2></header>
               <div className="showcase__viewport"><div className="showcase__track" data-showcase-track>
                 {showcases.map((item, index) => (
                   <article className="showcase-card" key={item.title} data-cursor="VIEW"><div className="showcase-card__media"><Image src={item.image} alt={item.alt} fill preload={index === 0} sizes="(max-width: 1023px) 100vw, 70vw" className="cover-image" /><div className="showcase-card__scope">{item.scope.map((scope) => <span key={scope}>{scope}</span>)}</div></div><div className="showcase-card__meta"><span>{item.number}</span><h3>{item.title}</h3>{index === 0 ? <VideoLightbox src="/media/hero-production.mp4" poster="/media/hero-production-poster.jpg" /> : <ArrowUpRight aria-hidden="true" size={22} />}</div></article>
@@ -232,21 +232,21 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="system" aria-labelledby="system-title"><div className="container system__layout"><div><p className="section-label">Visão 360°</p><h2 id="system-title">Enquanto o convidado vê o evento, nós vemos todo o sistema.</h2></div><div className="system__orbit" data-system-orbit aria-label="Etapas coordenadas pela DB Experience"><span className="system__center">Uma experiência</span>{systemSteps.map((step, index) => <span className={`system__step system__step--${index + 1}`} key={step}>{step}</span>)}</div></div></section>
+          <section className="system" aria-labelledby="system-title"><div className="container system__layout"><div><p className="section-label">Visão 360°</p><h2 id="system-title">Enquanto o convidado vê o evento, nós vemos todo o sistema</h2></div><div className="system__orbit" data-system-orbit aria-label="Etapas coordenadas pela DB Experience"><span className="system__center">Uma experiência</span>{systemSteps.map((step, index) => <span className={`system__step system__step--${index + 1}`} key={step}>{step}</span>)}</div></div></section>
 
           <section className="complexity" data-complexity-section aria-labelledby="complexity-title">
-            <div className="complexity__pin" data-complexity-pin><p className="section-label">O que você não precisa ver</p><h2 id="complexity-title" className="sr-only">Da complexidade à tranquilidade</h2><div className="complexity__words" aria-hidden="true">{complexity.map((word, index) => <span className={`complexity__word complexity__word--${index + 1}`} key={word} data-complexity-word>{word}</span>)}</div><p className="complexity__result" data-complexity-result>Tranquilidade</p><p className="complexity__explain">A DB organiza a complexidade para o cliente viver apenas o que importa.</p></div>
+            <div className="complexity__pin" data-complexity-pin><p className="section-label">O que você não precisa ver</p><h2 id="complexity-title" className="sr-only">Da complexidade à tranquilidade</h2><div className="complexity__words" aria-hidden="true">{complexity.map((word, index) => <span className={`complexity__word complexity__word--${index + 1}`} key={word} data-complexity-word>{word}</span>)}</div><p className="complexity__result" data-complexity-result>Tranquilidade</p><p className="complexity__explain">A DB organiza a complexidade para o cliente viver apenas o que importa</p></div>
           </section>
 
           <section className="manifesto" data-manifesto-section aria-labelledby="manifesto-title">
-            <div className="manifesto__pin" data-manifesto-pin><VerticalFilm src="/media/manifesto-event.mp4" poster="/media/manifesto-event-poster.jpg" objectPosition="center 44%" className="manifesto__film" ariaLabel="Recepção e bastidores de uma experiência corporativa real" /><div className="manifesto__overlay" /><div className="container manifesto__copy"><h2 id="manifesto-title"><span data-manifesto-line>Você não precisa pensar em cada detalhe.</span><span data-manifesto-line>Nós precisamos.</span></h2></div></div>
+            <div className="manifesto__pin" data-manifesto-pin><VerticalFilm src="/media/manifesto-event.mp4" poster="/media/manifesto-event-poster.jpg" objectPosition="center 44%" className="manifesto__film" ariaLabel="Recepção e bastidores de uma experiência corporativa real" /><div className="manifesto__overlay" /><div className="container manifesto__copy"><h2 id="manifesto-title"><span data-manifesto-line>Você não precisa pensar em cada detalhe</span><span data-manifesto-line>Nós pensamo por você</span></h2></div></div>
           </section>
 
-          <section className="about" id="sobre" aria-labelledby="about-title"><div className="container about__layout"><figure className="about__portrait" data-about-image data-cursor="DETAIL"><Image src="/media/dany-portrait.jpg" alt="Dany Brandão acompanhando pessoalmente uma experiência" fill sizes="(max-width: 1023px) 100vw, 42vw" className="cover-image" /><span className="about__shape about__shape--one" aria-hidden="true" /><span className="about__shape about__shape--two" aria-hidden="true" /></figure><div className="about__copy"><p className="section-label">Sobre Dany</p><h2 id="about-title">Um olhar treinado para perceber o que muitas vezes passa despercebido.</h2><p data-reveal>A trajetória de Dany no universo artístico desenvolveu sensibilidade para estética, comportamento, presença e experiência.</p><p data-reveal>Hoje, esse olhar se combina com planejamento, produção e operação na criação de experiências corporativas coerentes com cada marca.</p><a className="about__social" href="https://www.linkedin.com/in/dany-brandão-b10a5ab7/" target="_blank" rel="noreferrer"><span className="about__social-mark" aria-hidden="true">in</span><span>Conhecer o LinkedIn da Dany</span><ArrowUpRight aria-hidden="true" size={16} /></a></div></div></section>
+          <section className="about" id="sobre" aria-labelledby="about-title"><div className="container about__layout"><figure className="about__portrait" data-about-image data-cursor="DETAIL"><Image src="/media/Mood do sábado à noite... Gastronomia coreana adaptado para o Brasil ministrado pelo mestre _pauloshin. Uma experiência de mesas com grelhas embutidas. E(.jpg.jpeg" alt="Dany Brandão acompanhando pessoalmente uma experiência" fill sizes="(max-width: 1023px) 100vw, 42vw" className="cover-image" /><span className="about__shape about__shape--one" aria-hidden="true" /><span className="about__shape about__shape--two" aria-hidden="true" /></figure><div className="about__copy"><p className="section-label">Sobre Dany</p><h2 id="about-title">Um olhar treinado para perceber o que muitas vezes passa despercebido</h2><p data-reveal>A trajetória de Dany no universo artístico desenvolveu sensibilidade para estética, comportamento, presença e experiência</p><p data-reveal>Hoje, esse olhar se combina com planejamento, produção e operação na criação de experiências corporativas coerentes com cada marca</p><a className="about__social" href="https://www.linkedin.com/in/dany-brandão-b10a5ab7/" target="_blank" rel="noreferrer"><span className="about__social-mark" aria-hidden="true">in</span><span>Conhecer o LinkedIn da Dany</span><ArrowUpRight aria-hidden="true" size={16} /></a></div></div></section>
 
           <section className="contact" id="contato" aria-labelledby="contact-title">
-            <div className="container contact__headline"><p className="section-label">Uma conversa é o primeiro passo</p><h2 id="contact-title">Sua marca já tem uma identidade. Nosso trabalho é fazer as pessoas sentirem isso.</h2><p>Conte o que você está planejando. O restante começa com uma conversa.</p></div>
-            <div className="container contact__layout"><div className="contact__note" data-reveal><span>Estratégia</span><span>Hospitalidade</span><span>Produção</span><span>Execução</span><div className="contact__promise"><Check aria-hidden="true" size={18} /><p>Uma conversa objetiva, tratada com cuidado e discrição.</p></div></div><div data-reveal><ContactForm /></div></div>
+            <div className="container contact__headline"><p className="section-label">Uma conversa é o primeiro passo</p><h2 id="contact-title">Sua marca já tem uma identidade. Nosso trabalho é fazer as pessoas sentirem isso</h2><p>Conte o que você está planejando. O restante começa com uma conversa</p></div>
+            <div className="container contact__layout"><div className="contact__note" data-reveal><span>Estratégia</span><span>Hospitalidade</span><span>Produção</span><span>Execução</span><div className="contact__promise"><Check aria-hidden="true" size={18} /><p>Uma conversa objetiva, tratada com cuidado e discrição</p></div></div><div data-reveal><ContactForm /></div></div>
           </section>
         </main>
 
