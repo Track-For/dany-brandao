@@ -22,6 +22,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
       let ticker: ((time: number) => void) | null = null;
       let heroVideo: HTMLVideoElement | null = null;
       let syncHeroVideo: (() => void) | null = null;
+      const interactionCleanups: Array<() => void> = [];
 
       if (!reducedMotion && pointerFine && window.innerWidth >= 1024) {
         lenis = new Lenis({ duration: 1.05, smoothWheel: true });
@@ -86,7 +87,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
           ".partners__header h2, .details__header h2, .showcase__header h2, .system h2, .about__copy h2, .contact__headline h2, [data-title-reveal]",
         );
         sectionTitles.forEach((title) => {
-          gsap.from(title, { y: 38, autoAlpha: 0, duration: 0.85, ease: "power3.out", scrollTrigger: { trigger: title, start: "top 88%", once: true } });
+          gsap.fromTo(title, { yPercent: 24, clipPath: "inset(0 0 100% 0)", autoAlpha: 0 }, { yPercent: 0, clipPath: "inset(0 0 0% 0)", autoAlpha: 1, duration: 1.05, ease: "power4.out", scrollTrigger: { trigger: title, start: "top 88%", once: true } });
         });
 
         ScrollTrigger.batch("[data-reveal]", {
@@ -255,16 +256,129 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
           const scatter = isMobile
             ? [[-112, -224], [92, -154], [-96, -48], [102, 66], [-24, 184]]
             : [[-520, -260], [-180, -310], [220, -275], [500, -120], [-430, -65], [330, 30], [-320, 145], [30, 210], [390, 250], [-100, 315]];
-          gsap.set(activeWords, { xPercent: -50, yPercent: -50, x: (index) => scatter[index][0], y: (index) => scatter[index][1], rotate: (index) => (index % 2 ? 4 : -4), autoAlpha: 1 });
+          const systemSource = document.querySelector<HTMLElement>("[data-system-orbit]");
+          const systemSourceSteps = systemSource ? gsap.utils.toArray<HTMLElement>("[data-system-step]", systemSource) : [];
+          const systemSourceCore = systemSource?.querySelector<HTMLElement>("[data-system-core]");
+          const systemSourceGuide = systemSource?.querySelector<HTMLElement>(".system__orbit-scene");
+          const complexityPin = complexity.querySelector<HTMLElement>("[data-complexity-pin]");
+          const hasHandoff = Boolean(systemSource && systemSourceSteps.length && complexityPin);
+
+          gsap.set(activeWords, { xPercent: -50, yPercent: -50, x: (index) => scatter[index][0], y: (index) => scatter[index][1], rotate: (index) => (index % 2 ? 4 : -4), autoAlpha: hasHandoff ? 0 : 1 });
           if (inactiveWords.length) gsap.set(inactiveWords, { autoAlpha: 0 });
           gsap.set(complexityResult, { scale: 0.82, autoAlpha: 0 });
+          let animatedComplexityWords = activeWords;
+          let usesHandoffLayer = false;
+
+          if (hasHandoff && systemSource && complexityPin) {
+            const handoffLayer = document.createElement("div");
+            handoffLayer.className = "system-handoff-layer";
+            handoffLayer.setAttribute("aria-hidden", "true");
+            root.current?.appendChild(handoffLayer);
+
+            const targetIndexes = isMobile ? [3, 0, 4, 1, 2] : [6, 0, 5, 4, 7, 1, 2, 8];
+            const sourceIndexes = isMobile ? [0, 1, 3, 5, 6] : systemSourceSteps.map((_, index) => index);
+            const handoffPairs = sourceIndexes.map((sourceIndex, pairIndex) => {
+              const source = systemSourceSteps[sourceIndex];
+              const target = activeWords[targetIndexes[pairIndex]];
+              const word = document.createElement("span");
+              word.className = "system-handoff-word";
+              word.textContent = source.textContent;
+              word.style.fontSize = window.getComputedStyle(source).fontSize;
+              handoffLayer.appendChild(word);
+              return { source, target, word };
+            }).filter((pair) => pair.source && pair.target);
+            const handoffWords = handoffPairs.map((pair) => pair.word);
+            animatedComplexityWords = handoffWords;
+            usesHandoffLayer = true;
+
+            const contentRect = (element: HTMLElement) => {
+              const range = document.createRange();
+              range.selectNodeContents(element);
+              const rect = range.getBoundingClientRect();
+              return rect.width > 0 ? rect : element.getBoundingClientRect();
+            };
+            const handoffStart = () => {
+              const scoreRect = systemSource.getBoundingClientRect();
+              return scoreRect.bottom + window.scrollY - window.innerHeight * 0.94;
+            };
+            const sourceX = (index: number) => contentRect(handoffPairs[index].source).left;
+            const sourceY = (index: number) => {
+              const rect = contentRect(handoffPairs[index].source);
+              return rect.top + window.scrollY - handoffStart();
+            };
+            const targetX = (index: number) => {
+              const pinRect = complexityPin.getBoundingClientRect();
+              const targetRect = handoffPairs[index].target.getBoundingClientRect();
+              return targetRect.left - pinRect.left;
+            };
+            const targetY = (index: number) => {
+              const pinRect = complexityPin.getBoundingClientRect();
+              const targetRect = handoffPairs[index].target.getBoundingClientRect();
+              return targetRect.top - pinRect.top;
+            };
+            const targetScale = (index: number) => {
+              const sourceRect = contentRect(handoffPairs[index].source);
+              const targetRect = handoffPairs[index].target.getBoundingClientRect();
+              return gsap.utils.clamp(0.82, 1.9, targetRect.height / Math.max(sourceRect.height, 1));
+            };
+            const activateHandoff = () => {
+              gsap.set(handoffLayer, { autoAlpha: 1 });
+              gsap.set(handoffWords, { autoAlpha: 1, willChange: "transform, opacity" });
+              gsap.set(systemSourceSteps, { autoAlpha: 0 });
+              gsap.set([systemSourceCore, systemSourceGuide].filter(Boolean), { autoAlpha: 0 });
+              gsap.set(activeWords, { autoAlpha: 0 });
+            };
+            const deactivateHandoff = () => {
+              gsap.set(handoffLayer, { autoAlpha: 0 });
+              gsap.set(handoffWords, { autoAlpha: 0, willChange: "auto" });
+            };
+
+            gsap.set(handoffLayer, { autoAlpha: 0 });
+
+            const handoffTimeline = gsap.timeline({
+              scrollTrigger: {
+                trigger: systemSource,
+                start: "bottom 94%",
+                endTrigger: complexity,
+                end: "top top",
+                scrub: 0.8,
+                invalidateOnRefresh: true,
+                onEnter: activateHandoff,
+                onLeave: () => {
+                  activateHandoff();
+                  gsap.set(systemSourceSteps, { autoAlpha: 0 });
+                  gsap.set(activeWords, { autoAlpha: 0 });
+                },
+                onEnterBack: activateHandoff,
+                onLeaveBack: () => {
+                  deactivateHandoff();
+                  gsap.set(systemSourceSteps, { autoAlpha: 1 });
+                  gsap.set([systemSourceCore, systemSourceGuide].filter(Boolean), { autoAlpha: 1 });
+                  gsap.set(activeWords, { autoAlpha: 0 });
+                },
+              },
+            });
+
+            const flowOffsets = isMobile ? [0, 0.035, 0.07, 0.02, 0.055] : [0, 0.06, 0.025, 0.085, 0.04, 0.105, 0.015, 0.075];
+            handoffPairs.forEach((_, index) => {
+              const direction = index % 2 === 0 ? -1 : 1;
+              const offset = flowOffsets[index] ?? index * 0.02;
+              handoffTimeline
+                .fromTo(handoffWords[index], { x: () => sourceX(index), y: () => sourceY(index), scale: 1, rotation: 0, color: "#f0ebe1", force3D: true }, { x: () => sourceX(index) + (targetX(index) - sourceX(index)) * 0.16 + direction * 22, y: () => sourceY(index) + (targetY(index) - sourceY(index)) * 0.12 - 28, scale: 1.045, rotation: direction * 2.2, duration: 0.24, ease: "power2.out", force3D: true }, offset)
+                .to(handoffWords[index], { x: () => targetX(index), y: () => targetY(index), scale: () => targetScale(index), rotation: targetIndexes[index] % 2 ? 4 : -4, color: "#418a90", duration: 0.76, ease: "power3.inOut", force3D: true }, offset + 0.24);
+            });
+
+            interactionCleanups.push(() => handoffLayer.remove());
+          }
 
           const pause = { progress: 0 };
-          gsap.timeline({ scrollTrigger: { trigger: complexity, start: "top top", end: "bottom bottom", scrub: 0.9, invalidateOnRefresh: true } })
+          const assembledX = (index: number) => usesHandoffLayer ? window.innerWidth / 2 - animatedComplexityWords[index].offsetWidth / 2 : 0;
+          const assembledY = (index: number) => usesHandoffLayer ? window.innerHeight / 2 - animatedComplexityWords[index].offsetHeight / 2 : 0;
+          gsap.timeline({ scrollTrigger: { trigger: complexity, start: "top top", end: "bottom bottom", scrub: 0.75, invalidateOnRefresh: true } })
             .to(pause, { progress: 1, duration: 0.34, ease: "none" })
-            .to(activeWords, { x: 0, y: 0, rotate: 0, scale: 0.82, color: "#418a90", duration: 0.68, stagger: 0.018, ease: "power2.inOut" })
+            .to(animatedComplexityWords, { x: assembledX, y: assembledY, rotate: 0, scale: 0.82, color: "#418a90", duration: 0.68, stagger: 0.018, ease: "power2.inOut" })
             .to(pause, { progress: 2, duration: 0.18, ease: "none" })
-            .to(activeWords, { scale: 0.08, autoAlpha: 0, duration: 0.3, stagger: 0.012, ease: "power3.in" })
+            .to(animatedComplexityWords, { scale: 0.08, autoAlpha: 0, duration: 0.3, stagger: 0.012, ease: "power3.in" })
             .fromTo(complexityResult, { scale: 0.82, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.3, ease: "power3.out" }, "-=0.04");
         }
 
@@ -277,82 +391,75 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
             .fromTo(manifestoLines, { y: 28, opacity: 0.12 }, { y: 0, opacity: 1, stagger: 0.25, duration: 0.5, ease: "power2.out" }, 0.15);
         }
 
-        const orbit = document.querySelector<HTMLElement>("[data-system-orbit]");
-        if (orbit) {
-          const orbitRings = gsap.utils.toArray<HTMLElement>("[data-system-ring]", orbit);
-          const orbitSteps = gsap.utils.toArray<HTMLElement>("[data-system-step]", orbit);
-          const orbitCore = orbit.querySelector<HTMLElement>("[data-system-core]");
-          const compact = window.innerWidth < 700;
-          const depth = compact ? 42 : 74;
-          const radiusRatios = compact ? [0.42, 0.29, 0.21] : [0.47, 0.315, 0.205];
-          const clamp = gsap.utils.clamp(0, 1);
-          const orbitGroups = orbitRings.map((_, orbitIndex) => orbitSteps.filter((step) => Number(step.dataset.orbit) === orbitIndex));
-          const stepSetters = new Map(orbitSteps.map((step) => [step, {
-            x: gsap.quickSetter(step, "x", "px"),
-            y: gsap.quickSetter(step, "y", "px"),
-            z: gsap.quickSetter(step, "z", "px"),
-            scale: gsap.quickSetter(step, "scale"),
-            opacity: gsap.quickSetter(step, "opacity"),
-          }]));
-
-          gsap.set(orbitSteps, { xPercent: -50, yPercent: -50, force3D: true });
-
-          const orbitStates = [
-            { phase: 0, tiltX: 62, tiltY: -10, baseTiltX: 62, baseTiltY: -10, baseZ: -depth * 0.42, direction: 1, duration: 28 },
-            { phase: 0.7, tiltX: 24, tiltY: 64, baseTiltX: 24, baseTiltY: 64, baseZ: 0, direction: 1, duration: 21 },
-            { phase: 1.4, tiltX: 53, tiltY: 30, baseTiltX: 53, baseTiltY: 30, baseZ: depth * 0.34, direction: 1, duration: 15 },
-          ];
-
-          const renderOrbit = (orbitIndex: number) => {
-            const state = orbitStates[orbitIndex];
-            const ring = orbitRings[orbitIndex];
-            const steps = orbitGroups[orbitIndex];
-            const radius = orbit.offsetWidth * radiusRatios[orbitIndex];
-            const tiltX = state.tiltX * Math.PI / 180;
-            const tiltY = state.tiltY * Math.PI / 180;
-            const cosX = Math.cos(tiltX);
-            const sinX = Math.sin(tiltX);
-            const cosY = Math.cos(tiltY);
-            const sinY = Math.sin(tiltY);
-
-            gsap.set(ring, { rotationX: state.tiltX, rotationY: state.tiltY, z: state.baseZ, transformOrigin: "50% 50%", force3D: true });
-
-            steps.forEach((step, stepIndex) => {
-              const angle = state.phase + (stepIndex / steps.length) * Math.PI * 2;
-              const localX = Math.cos(angle) * radius;
-              const localY = Math.sin(angle) * radius;
-              const rotatedY = localY * cosX;
-              const rotatedZ = localY * sinX;
-              const x = localX * cosY + rotatedZ * sinY;
-              const y = rotatedY;
-              const z = -localX * sinY + rotatedZ * cosY + state.baseZ;
-              const front = clamp((z + radius + depth) / ((radius + depth) * 2));
-              const setters = stepSetters.get(step);
-
-              setters?.x(x);
-              setters?.y(y);
-              setters?.z(z);
-              setters?.scale(0.86 + front * 0.2);
-              setters?.opacity(0.36 + front * 0.64);
-              step.style.zIndex = z > state.baseZ ? "5" : "1";
-            });
-          };
-
-          orbitStates.forEach((state, orbitIndex) => {
-            renderOrbit(orbitIndex);
-            gsap.to(state, { phase: state.phase + state.direction * Math.PI * 2, duration: state.duration, repeat: -1, ease: "none", onUpdate: () => renderOrbit(orbitIndex) });
-            gsap.to(state, { tiltX: state.baseTiltX + (orbitIndex % 2 === 0 ? 5 : -4), tiltY: state.baseTiltY + (orbitIndex % 2 === 0 ? -4 : 5), duration: 5.2 + orbitIndex, repeat: -1, yoyo: true, ease: "sine.inOut", onUpdate: () => renderOrbit(orbitIndex) });
+        const systemScore = document.querySelector<HTMLElement>("[data-system-orbit]");
+        if (systemScore) {
+          const scoreGuide = systemScore.querySelector<HTMLElement>(".system__orbit-scene");
+          const scoreCore = systemScore.querySelector<HTMLElement>("[data-system-core]");
+          const scoreSteps = gsap.utils.toArray<HTMLElement>("[data-system-step]", systemScore);
+          const scoreTimeline = gsap.timeline({
+            scrollTrigger: { trigger: systemScore, start: "top 82%", once: true },
           });
 
-          if (orbitCore) {
-            gsap.fromTo(orbitCore, { z: -depth * 0.18, scale: 0.96 }, { z: depth * 0.32, scale: 1.05, duration: 3.6, repeat: -1, yoyo: true, ease: "sine.inOut", force3D: true });
-          }
+          if (scoreGuide) scoreTimeline.fromTo(scoreGuide, { scaleY: 0 }, { scaleY: 1, duration: 1.35, ease: "power3.inOut" }, 0);
+          if (scoreCore) scoreTimeline.fromTo(scoreCore, { y: 24, clipPath: "inset(0 100% 0 0)" }, { y: 0, clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: "power4.out" }, 0.08);
+          scoreTimeline.fromTo(
+            scoreSteps,
+            { x: (index) => index % 2 === 0 ? -34 : 34, autoAlpha: 0, clipPath: (index) => index % 2 === 0 ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)" },
+            { x: 0, autoAlpha: 1, clipPath: "inset(0 0% 0 0)", duration: 0.72, stagger: 0.075, ease: "power3.out", clearProps: "transform,opacity,visibility,clipPath" },
+            0.22,
+          );
         }
 
         const aboutImage = document.querySelector<HTMLElement>("[data-about-image]");
         if (aboutImage) gsap.fromTo(aboutImage, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0 0)", duration: 1.1, ease: "power4.out", scrollTrigger: { trigger: aboutImage, start: "top 84%", once: true } });
 
         if (pointerFine && window.innerWidth >= 1024) {
+          const cinematicLight = document.querySelector<HTMLElement>("[data-cinematic-light]");
+          if (cinematicLight) {
+            gsap.set(cinematicLight, { xPercent: -50, yPercent: -50, x: window.innerWidth / 2, y: window.innerHeight / 2 });
+            const lightX = gsap.quickTo(cinematicLight, "x", { duration: 0.85, ease: "power3" });
+            const lightY = gsap.quickTo(cinematicLight, "y", { duration: 0.85, ease: "power3" });
+            const moveLight = (event: PointerEvent) => { lightX(event.clientX); lightY(event.clientY); };
+            window.addEventListener("pointermove", moveLight);
+            interactionCleanups.push(() => window.removeEventListener("pointermove", moveLight));
+          }
+
+          gsap.utils.toArray<HTMLElement>(".showcase-card, .about__portrait").forEach((scene) => {
+            const visual = scene.querySelector<HTMLElement>("img");
+            if (!visual) return;
+
+            gsap.set(scene, { transformPerspective: 1100, transformStyle: "preserve-3d", transformOrigin: "50% 50%" });
+            const moveScene = (event: PointerEvent) => {
+              const bounds = scene.getBoundingClientRect();
+              const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
+              const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2;
+              gsap.to(scene, { rotationY: x * 3.4, rotationX: y * -3.4, scale: 1.008, duration: 0.55, ease: "power3.out", overwrite: "auto", force3D: true });
+              gsap.to(visual, { xPercent: x * 1.8, yPercent: y * 1.4, scale: 1.055, duration: 0.75, ease: "power3.out", overwrite: "auto", force3D: true });
+            };
+            const leaveScene = () => {
+              gsap.to(scene, { rotationX: 0, rotationY: 0, scale: 1, duration: 0.9, ease: "power3.out", overwrite: "auto" });
+              gsap.to(visual, { xPercent: 0, yPercent: 0, scale: 1, duration: 1, ease: "power3.out", overwrite: "auto" });
+            };
+
+            scene.addEventListener("pointermove", moveScene);
+            scene.addEventListener("pointerleave", leaveScene);
+            interactionCleanups.push(() => {
+              scene.removeEventListener("pointermove", moveScene);
+              scene.removeEventListener("pointerleave", leaveScene);
+            });
+          });
+
+          gsap.utils.toArray<HTMLElement>(".partner-card").forEach((card) => {
+            const enterCard = () => gsap.to(card, { y: -10, scale: 1.025, duration: 0.42, ease: "power3.out", overwrite: "auto", force3D: true });
+            const leaveCard = () => gsap.to(card, { y: 0, scale: 1, duration: 0.7, ease: "power3.out", overwrite: "auto" });
+            card.addEventListener("pointerenter", enterCard);
+            card.addEventListener("pointerleave", leaveCard);
+            interactionCleanups.push(() => {
+              card.removeEventListener("pointerenter", enterCard);
+              card.removeEventListener("pointerleave", leaveCard);
+            });
+          });
+
           const cursor = document.querySelector<HTMLElement>("[data-cursor-ui]");
           const label = cursor?.querySelector<HTMLElement>("span");
           if (cursor && label) {
@@ -394,6 +501,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
 
       return () => {
         anchorLinks.forEach((link) => link.removeEventListener("click", handleAnchor));
+        interactionCleanups.forEach((cleanup) => cleanup());
         if (heroVideo && syncHeroVideo) heroVideo.removeEventListener("loadedmetadata", syncHeroVideo);
         responsive.revert();
         if (ticker) gsap.ticker.remove(ticker);
@@ -403,5 +511,5 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
     { scope: root },
   );
 
-  return <div ref={root}>{children}<div className="context-cursor" data-cursor-ui aria-hidden="true"><span /></div></div>;
+  return <div ref={root} className="cinematic-shell">{children}<div className="cinematic-light" data-cinematic-light aria-hidden="true" /><div className="cinematic-texture" aria-hidden="true" /><div className="context-cursor" data-cursor-ui aria-hidden="true"><span /></div></div>;
 }

@@ -197,7 +197,7 @@ export default function Home() {
                   <div className="container details__header"><p className="section-label">O que sustenta a percepção</p><h2 id="details-title"><span className="details__title-primary">O todo é percebido</span><span className="details__title-secondary">Os detalhes constroem</span></h2><p>A leitura acontece por inteiro. O cuidado se revela em camadas</p></div>
                 </header>
                 <article className="details__panel details__panel--direction">
-                  <figure className="details__curtain" data-detail-curtain data-cursor="DETAIL"><Image src="/media/detail-direction.jpg" alt="Dany orientando a preparação de um ambiente" fill sizes="(max-width: 1023px) 100vw, 72vw" className="cover-image" /></figure>
+                  <figure className="details__curtain" data-detail-curtain data-cursor="DETAIL"><Image src="/media/dany-portrait.jpg" alt="Dany orientando a preparação de um ambiente" fill sizes="(max-width: 1023px) 100vw, 72vw" className="cover-image" /></figure>
                   <p>Direção antes da chegada</p>
                 </article>
                 <article className="details__panel details__panel--reel">
