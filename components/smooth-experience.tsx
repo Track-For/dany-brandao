@@ -166,6 +166,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
             const progress = document.querySelector<HTMLElement>("[data-method-progress]");
             gsap.set([...chapters.slice(1), ...visuals.slice(1), ...numbers.slice(1)], { autoAlpha: 0 });
             gsap.set(visuals.slice(1), { clipPath: "inset(100% 0 0 0)" });
+            markers[0]?.classList.add("is-active");
             const methodTl = gsap.timeline({ scrollTrigger: { trigger: methodPin, start: "top top", end: "+=300%", pin: true, scrub: 0.85, onUpdate: (self) => { const active = Math.min(5, Math.round(self.progress * 5)); markers.forEach((marker, index) => marker.classList.toggle("is-active", index <= active)); } } });
             if (progress) methodTl.fromTo(progress, { scaleX: 0 }, { scaleX: 1, duration: 6, ease: "none" }, 0);
             for (let index = 1; index < chapters.length; index += 1) {
