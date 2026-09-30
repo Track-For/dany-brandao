@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Check } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
 import { SiteHeader } from "@/components/site-header";
 import { SmoothExperience } from "@/components/smooth-experience";
@@ -44,6 +44,15 @@ const partnerRows = [
 const systemSteps = ["Briefing", "RSVP", "Fornecedores", "Credenciamento", "Hospitalidade", "Logística", "Produção", "Execução"];
 const complexity = ["RSVP", "Logística", "Produção", "Montagem", "Credenciamento", "Fornecedores", "Cronograma", "Hospitalidade", "Operação", "Imprevistos"];
 
+const heroMoments = [
+  "A marca dá o tom.",
+  "A chegada cria presença.",
+  "O cuidado muda o ritmo.",
+  "Cada detalhe comunica.",
+  "A experiência faz sentir.",
+  "Tudo começa pela escuta.",
+];
+
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": ["Organization", "ProfessionalService"],
@@ -60,36 +69,43 @@ export default function Home() {
       <SiteHeader />
       <SmoothExperience>
         <main id="conteudo">
-          <section className="hero" data-hero-section aria-labelledby="hero-title">
-            <div className="hero__grain" aria-hidden="true" />
-            <div className="hero__vignette" data-hero-vignette aria-hidden="true">
-              <div className="hero__vignette-frame" />
-              <span>DB</span>
-              <p>A marca abre a experiência</p>
-            </div>
-            <div className="container hero__stage">
-              <p className="hero__label" data-hero-label>DB Experience</p>
-              <div className="hero__microcopy" data-hero-microcopy><span>Corporate experiences</span><span>São Paulo</span></div>
-              <h1 id="hero-title" className="hero__title" aria-label="A marca dá o tom. A experiência faz sentir.">
-                <span className="hero__phrase hero__phrase--left" aria-hidden="true">
-                  <span data-hero-left-line>A marca</span>
-                  <span data-hero-left-line>dá o tom</span>
-                </span>
-                <span className="hero__phrase hero__phrase--right" aria-hidden="true">
-                  <span data-hero-right-line>A experiência</span>
-                  <span data-hero-right-line>faz sentir</span>
-                </span>
-              </h1>
-              <div className="hero__film-wrap" data-hero-film data-cursor="PLAY">
-                <VerticalFilm src="/media/hero-production.mp4" poster="/media/hero-production-poster.jpg" label="Reel 01 / Bastidores reais" caption="Experiências corporativas / São Paulo" objectPosition="center 44%" priority className="hero__film" ariaLabel="Bastidores reais da preparação de uma experiência corporativa" />
+          <section className="hero-scroll" data-hero-section data-hero-duration="4.58" aria-labelledby="hero-title">
+            <div className="hero-scroll__pin" data-hero-pin>
+              <video
+                className="hero-scroll__video"
+                data-hero-video
+                muted
+                playsInline
+                preload="auto"
+                poster="/videos/video-hero-poster.jpg"
+                aria-label="Uma experiência corporativa construída em seis momentos"
+              >
+                <source src="/videos/video-hero.mp4" type='video/mp4; codecs="hvc1"' />
+                <source src="/videos/video-hero-web.mp4" type='video/mp4; codecs="avc1.42E01E"' />
+              </video>
+              <div className="hero-scroll__veil" data-hero-veil aria-hidden="true" />
+              <div className="hero-scroll__grain" aria-hidden="true" />
+              <div className="hero-scroll__chrome" aria-hidden="true">
+                <span>DB Experience</span>
+                <span>Experiências corporativas</span>
               </div>
-              <span className="hero__accent-line" data-hero-accent aria-hidden="true" />
-              <div className="hero__meta" data-hero-meta>
-                <p>Estratégia, hospitalidade, produção e execução para marcas que querem ser sentidas.</p>
-                <a href="#contato" className="button button--teal" data-magnetic><span>Conversar sobre um projeto</span><ArrowUpRight aria-hidden="true" size={17} /></a>
+              <h1 id="hero-title" className="sr-only">A marca dá o tom. A experiência faz sentir.</h1>
+              <div className="hero-scroll__moments">
+                {heroMoments.map((moment, index) => (
+                  <div className="hero-scroll__moment" data-hero-chapter key={moment}>
+                    <p aria-hidden="true">{moment}</p>
+                    {index === heroMoments.length - 1 ? (
+                      <a href="#contato" className="button hero-scroll__cta">
+                        <span>Conversar sobre um projeto</span>
+                        <ArrowUpRight aria-hidden="true" size={17} />
+                      </a>
+                    ) : null}
+                  </div>
+                ))}
               </div>
-              <a className="hero__scroll" href="#parceiros" aria-label="Continuar para parceiros"><span>Continuar</span><ArrowDownRight aria-hidden="true" size={17} /></a>
-              <p className="hero__resolution" data-hero-resolution><span>Tudo começa</span><span>pela escuta</span></p>
+              <div className="hero-scroll__progress" data-hero-progress aria-hidden="true">
+                {heroMoments.map((moment) => <span key={moment}><i /></span>)}
+              </div>
             </div>
           </section>
 
@@ -149,7 +165,7 @@ export default function Home() {
           </section>
 
           <section className="zoom-bridge" data-zoom-section aria-label="Transição para o método">
-            <div className="zoom-bridge__pin"><div className="zoom-bridge__copy" aria-hidden="true"><span data-zoom-left>Antes da experiência,</span><span data-zoom-right>vem o entendimento</span></div><figure className="zoom-bridge__media" data-zoom-media><Image src="/images/project-dinner.png" alt="Estrutura técnica organizada antes de uma experiência" fill sizes="100vw" className="cover-image" /></figure></div>
+            <div className="zoom-bridge__pin"><div className="zoom-bridge__copy" aria-hidden="true"><span data-zoom-left>Antes da experiência,</span><span data-zoom-right>vem o entendimento</span></div><figure className="zoom-bridge__media" data-zoom-media><Image src="/images/hero-arrival.png" alt="Convidados entrando em uma experiência corporativa" fill sizes="100vw" className="cover-image" /><span className="zoom-bridge__frame" data-zoom-frame aria-hidden="true" /></figure></div>
           </section>
 
           <section className="method" id="metodo" aria-labelledby="method-title">
@@ -174,13 +190,34 @@ export default function Home() {
 
           <section className="discretion" aria-labelledby="discretion-title"><div className="container discretion__inner"><p className="section-label">Discrição também é cuidado</p><h2 id="discretion-title">Algumas experiências são feitas para serem vividas, não publicadas.</h2><p data-reveal>Nem todo projeto precisa ser exposto para demonstrar a forma como pensamos, planejamos e executamos. A confiança também está no que sabemos preservar.</p></div></section>
 
-          <section className="details" id="detalhes" aria-labelledby="details-title">
-            <header className="container details__header"><p className="section-label">O que sustenta a percepção</p><h2 id="details-title">O todo é percebido. Os detalhes constroem.</h2></header>
-            <div className="details__story">
-              <figure className="detail-frame detail-frame--full" data-detail-frame data-cursor="DETAIL"><Image src="/media/detail-direction.jpg" alt="Dany orientando a preparação de um ambiente" fill sizes="100vw" className="cover-image" /><figcaption>Direção / antes da chegada</figcaption></figure>
-              <div className="detail-row detail-row--video"><VerticalFilm src="/media/dany-story.mp4" poster="/video/posters/dany-story.jpg" label="Presença" caption="Acompanhamento próximo" objectPosition="center 38%" className="detail-film detail-film--small" ariaLabel="Dany acompanhando os detalhes de uma experiência real" /><p data-reveal>O cuidado aparece no que o convidado sente e no que o cliente nem precisa acompanhar.</p></div>
-              <figure className="detail-frame detail-frame--left" data-detail-frame data-cursor="DETAIL"><Image src="/media/detail-architecture.jpg" alt="Vitral e textura arquitetônica do espaço" fill sizes="(max-width: 767px) 78vw, 45vw" className="cover-image" /><figcaption>Contexto / cada lugar pede uma leitura</figcaption></figure>
-              <div className="detail-row detail-row--reel"><p data-reveal>Ritmo, textura, hospitalidade e operação fazem parte da mesma decisão.</p><VerticalFilm src="/media/manifesto-event.mp4" poster="/media/manifesto-event-poster.jpg" label="Operação" caption="Do primeiro contato ao último detalhe" objectPosition="center 44%" className="detail-film detail-film--tall" ariaLabel="Operação de uma experiência corporativa real" /></div>
+          <section className="details" id="detalhes" data-details-section aria-labelledby="details-title">
+            <div className="details__pin" data-details-pin>
+              <div className="details__track" data-details-track>
+                <header className="details__intro details__panel">
+                  <div className="container details__header"><p className="section-label">O que sustenta a percepção</p><h2 id="details-title">O todo é percebido. Os detalhes constroem.</h2><p>A leitura acontece por inteiro. O cuidado se revela em camadas.</p></div>
+                </header>
+                <article className="details__panel details__panel--direction">
+                  <figure className="details__curtain" data-detail-curtain data-cursor="DETAIL"><Image src="/media/detail-direction.jpg" alt="Dany orientando a preparação de um ambiente" fill sizes="(max-width: 1023px) 100vw, 72vw" className="cover-image" /></figure>
+                  <p>Direção antes da chegada.</p>
+                </article>
+                <article className="details__panel details__panel--reel">
+                  <div className="details__curtain" data-detail-curtain>
+                    <VerticalFilm src="/media/hero-production.mp4" poster="/media/hero-production-poster.jpg" label="Reel 01" caption="Bastidores reais" objectPosition="center 44%" className="details__film" ariaLabel="Reel 1 com bastidores da produção de uma experiência corporativa" />
+                  </div>
+                  <p>O cuidado aparece no que o cliente nem precisa acompanhar.</p>
+                </article>
+                <article className="details__panel details__panel--context">
+                  <figure className="details__curtain" data-detail-curtain data-cursor="DETAIL"><Image src="/media/detail-architecture.jpg" alt="Vitral e textura arquitetônica do espaço" fill sizes="(max-width: 1023px) 100vw, 62vw" className="cover-image" /></figure>
+                  <p>Cada lugar pede uma leitura.</p>
+                </article>
+                <article className="details__panel details__panel--operation">
+                  <div className="details__curtain" data-detail-curtain>
+                    <VerticalFilm src="/media/manifesto-event.mp4" poster="/media/manifesto-event-poster.jpg" label="Operação" caption="Do primeiro contato ao último detalhe" objectPosition="center 44%" className="details__film" ariaLabel="Operação de uma experiência corporativa real" />
+                  </div>
+                  <p>Ritmo, textura, hospitalidade e operação fazem parte da mesma decisão.</p>
+                </article>
+              </div>
+              <div className="details__progress" aria-hidden="true"><span data-details-progress /></div>
             </div>
           </section>
 
@@ -205,7 +242,7 @@ export default function Home() {
             <div className="manifesto__pin" data-manifesto-pin><VerticalFilm src="/media/manifesto-event.mp4" poster="/media/manifesto-event-poster.jpg" objectPosition="center 44%" className="manifesto__film" ariaLabel="Recepção e bastidores de uma experiência corporativa real" /><div className="manifesto__overlay" /><div className="container manifesto__copy"><h2 id="manifesto-title"><span data-manifesto-line>Você não precisa pensar em cada detalhe.</span><span data-manifesto-line>Nós precisamos.</span></h2></div></div>
           </section>
 
-          <section className="about" id="sobre" aria-labelledby="about-title"><div className="container about__layout"><figure className="about__portrait" data-about-image data-cursor="DETAIL"><Image src="/media/dany-portrait.jpg" alt="Dany Brandão acompanhando pessoalmente uma experiência" fill sizes="(max-width: 1023px) 100vw, 42vw" className="cover-image" /><span className="about__shape about__shape--one" aria-hidden="true" /><span className="about__shape about__shape--two" aria-hidden="true" /></figure><div className="about__copy"><p className="section-label">Sobre Dany</p><h2 id="about-title">Um olhar treinado para perceber o que muitas vezes passa despercebido.</h2><p data-reveal>A trajetória de Dany no universo artístico desenvolveu sensibilidade para estética, comportamento, presença e experiência.</p><p data-reveal>Hoje, esse olhar se combina com planejamento, produção e operação na criação de experiências corporativas coerentes com cada marca.</p></div></div></section>
+          <section className="about" id="sobre" aria-labelledby="about-title"><div className="container about__layout"><figure className="about__portrait" data-about-image data-cursor="DETAIL"><Image src="/media/dany-portrait.jpg" alt="Dany Brandão acompanhando pessoalmente uma experiência" fill sizes="(max-width: 1023px) 100vw, 42vw" className="cover-image" /><span className="about__shape about__shape--one" aria-hidden="true" /><span className="about__shape about__shape--two" aria-hidden="true" /></figure><div className="about__copy"><p className="section-label">Sobre Dany</p><h2 id="about-title">Um olhar treinado para perceber o que muitas vezes passa despercebido.</h2><p data-reveal>A trajetória de Dany no universo artístico desenvolveu sensibilidade para estética, comportamento, presença e experiência.</p><p data-reveal>Hoje, esse olhar se combina com planejamento, produção e operação na criação de experiências corporativas coerentes com cada marca.</p><a className="about__social" href="https://www.linkedin.com/in/dany-brandão-b10a5ab7/" target="_blank" rel="noreferrer"><span className="about__social-mark" aria-hidden="true">in</span><span>Conhecer o LinkedIn da Dany</span><ArrowUpRight aria-hidden="true" size={16} /></a></div></div></section>
 
           <section className="contact" id="contato" aria-labelledby="contact-title">
             <div className="container contact__headline"><p className="section-label">Uma conversa é o primeiro passo</p><h2 id="contact-title">Sua marca já tem uma identidade. Nosso trabalho é fazer as pessoas sentirem isso.</h2><p>Conte o que você está planejando. O restante começa com uma conversa.</p></div>
@@ -213,7 +250,7 @@ export default function Home() {
           </section>
         </main>
 
-        <footer className="footer"><div className="container footer__top"><Link href="/" className="brand-signature" aria-label="Dany Brandão, página inicial"><Image src="/images/Logo_Fundo_Branco-removebg-preview.png" alt="Dany Brandão" width={547} height={184} /></Link><p>DB Experience<br />Corporate Experiences<br />São Paulo</p><a href="#contato" className="text-link"><span>Conversar sobre um projeto</span><ArrowRight aria-hidden="true" size={17} /></a></div><div className="container footer__bottom"><span>© {new Date().getFullYear()} Dany Brandão</span><span>Contato via formulário</span><span>Privacidade e discrição por princípio</span></div></footer>
+        <footer className="footer"><div className="container footer__top"><Link href="/" className="brand-signature" aria-label="Dany Brandão, página inicial"><Image src="/images/Logo_Fundo_Branco-removebg-preview.png" alt="Dany Brandão" width={547} height={184} /></Link><p>DB Experience<br />Corporate Experiences<br />São Paulo</p><a href="#contato" className="text-link"><span>Conversar sobre um projeto</span><ArrowRight aria-hidden="true" size={17} /></a><a className="text-link footer__linkedin" href="https://www.linkedin.com/in/dany-brandão-b10a5ab7/" target="_blank" rel="noreferrer"><span>LinkedIn</span><ArrowUpRight aria-hidden="true" size={16} /></a></div><div className="container footer__bottom"><span>© {new Date().getFullYear()} Dany Brandão</span><span>Contato via formulário</span><span>Privacidade e discrição por princípio</span></div></footer>
       </SmoothExperience>
     </>
   );
