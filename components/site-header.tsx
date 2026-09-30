@@ -11,15 +11,16 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const navigation = [
-  ["Linguagens", "/#linguagens"],
-  ["Método", "/#metodo"],
-  ["Detalhes", "/#detalhes"],
+  ["Home", "/#conteudo"],
+  ["Como pensamos", "/#metodo"],
   ["Experiências", "/#experiencias"],
-  ["Sobre", "/#sobre"],
+  ["Dany", "/#sobre"],
+  ["Contato", "/#contato"],
 ];
 
 export function SiteHeader() {
   const header = useRef<HTMLElement>(null);
+  const menuButton = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
 
   useGSAP(
@@ -44,7 +45,7 @@ export function SiteHeader() {
     () => {
       if (!open) return;
       gsap.fromTo(
-        ".mobile-menu nav a",
+        ".mobile-menu nav a, .mobile-menu__footer",
         { y: 24, autoAlpha: 0 },
         {
           y: 0,
@@ -60,13 +61,30 @@ export function SiteHeader() {
 
   useEffect(() => {
     document.body.classList.toggle("menu-open", open);
+    const menu = header.current?.querySelector<HTMLElement>(".mobile-menu");
+    const triggerButton = menuButton.current;
+    const focusable = Array.from(
+      menu?.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])') ?? [],
+    );
+    if (open) window.requestAnimationFrame(() => focusable[0]?.focus());
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
+      if (event.key !== "Tab" || !open || focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => {
       document.body.classList.remove("menu-open");
       window.removeEventListener("keydown", onKeyDown);
+      if (open) triggerButton?.focus();
     };
   }, [open]);
 
@@ -89,7 +107,7 @@ export function SiteHeader() {
         </Link>
 
         <nav className="desktop-nav" aria-label="Navegação principal">
-          {navigation.map(([label, href]) => (
+          {navigation.filter(([label]) => label !== "Contato").map(([label, href]) => (
             <Link key={label} href={href}>
               {label}
             </Link>
@@ -102,6 +120,7 @@ export function SiteHeader() {
         </Link>
 
         <button
+          ref={menuButton}
           type="button"
           className="menu-button"
           aria-label={open ? "Fechar menu" : "Abrir menu"}
@@ -129,10 +148,7 @@ export function SiteHeader() {
         </nav>
         <div className="mobile-menu__footer">
           <p>Uma marca. Múltiplas linguagens. O mesmo cuidado.</p>
-          <Link href="/#contato" onClick={() => setOpen(false)}>
-            Conversar sobre um projeto
-            <ArrowUpRight aria-hidden="true" size={18} />
-          </Link>
+          <span>Dany Brandão / DB Experience</span>
         </div>
       </div>
     </header>
