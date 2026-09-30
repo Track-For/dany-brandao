@@ -27,6 +27,8 @@ const initialFields: FormFields = {
   message: "",
 };
 
+const whatsappNumber = "5511981614592";
+
 function buildWhatsAppMessage(fields: FormFields) {
   const eventDetails = [
     fields.eventType ? fields.eventType : "",
@@ -63,7 +65,7 @@ export function ContactForm() {
     event.preventDefault();
     const message = buildWhatsAppMessage(fields);
     window.open(
-      `https://wa.me/?text=${encodeURIComponent(message)}`,
+      `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`,
       "_blank",
       "noopener,noreferrer",
     );

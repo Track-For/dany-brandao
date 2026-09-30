@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
+import { ArrowUpRight, Check } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
+import { DiscretionReveal } from "@/components/discretion-reveal";
 import { SiteHeader } from "@/components/site-header";
 import { SmoothExperience } from "@/components/smooth-experience";
 import { VerticalFilm } from "@/components/vertical-film";
@@ -188,13 +189,13 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="discretion" aria-labelledby="discretion-title"><div className="container discretion__inner"><p className="section-label">Discrição também é cuidado</p><h2 id="discretion-title">Algumas experiências são feitas para serem vividas, não publicadas.</h2><p data-reveal>Nem todo projeto precisa ser exposto para demonstrar a forma como pensamos, planejamos e executamos. A confiança também está no que sabemos preservar.</p></div></section>
+          <section className="discretion" id="discricao" aria-labelledby="discretion-title"><div className="container discretion__inner"><p className="section-label">Discrição também é cuidado</p><DiscretionReveal /><p data-reveal>Nem todo projeto precisa ser exposto para demonstrar a forma como pensamos, planejamos e executamos. A confiança também está no que sabemos preservar</p></div></section>
 
           <section className="details" id="detalhes" data-details-section aria-labelledby="details-title">
             <div className="details__pin" data-details-pin>
               <div className="details__track" data-details-track>
                 <header className="details__intro details__panel">
-                  <div className="container details__header"><p className="section-label">O que sustenta a percepção</p><h2 id="details-title">O todo é percebido. Os detalhes constroem.</h2><p>A leitura acontece por inteiro. O cuidado se revela em camadas.</p></div>
+                  <div className="container details__header"><p className="section-label">O que sustenta a percepção</p><h2 id="details-title"><span className="details__title-primary">O todo é percebido</span><span className="details__title-secondary">Os detalhes constroem</span></h2><p>A leitura acontece por inteiro. O cuidado se revela em camadas</p></div>
                 </header>
                 <article className="details__panel details__panel--direction">
                   <figure className="details__curtain" data-detail-curtain data-cursor="DETAIL"><Image src="/media/detail-direction.jpg" alt="Dany orientando a preparação de um ambiente" fill sizes="(max-width: 1023px) 100vw, 72vw" className="cover-image" /></figure>
@@ -232,7 +233,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="system" aria-labelledby="system-title"><div className="container system__layout"><div><p className="section-label">Visão 360°</p><h2 id="system-title">Enquanto o convidado vê o evento, nós vemos todo o sistema</h2></div><div className="system__orbit" data-system-orbit aria-label="Etapas coordenadas pela DB Experience"><span className="system__center">Uma experiência</span>{systemSteps.map((step, index) => <span className={`system__step system__step--${index + 1}`} key={step}>{step}</span>)}</div></div></section>
+          <section className="system" aria-labelledby="system-title"><div className="container system__layout"><div><p className="section-label">Visão 360°</p><h2 id="system-title">Enquanto o convidado vê o evento, nós vemos todo o sistema</h2></div><div className="system__orbit" data-system-orbit aria-label="Etapas coordenadas pela DB Experience"><div className="system__orbit-scene" aria-hidden="true"><span className="system__ring system__ring--outer" data-system-ring /><span className="system__ring system__ring--middle" data-system-ring /><span className="system__ring system__ring--inner" data-system-ring /></div><span className="system__core" data-system-core><span className="system__center">Uma experiência</span></span>{systemSteps.map((step, index) => <span className={`system__step system__step--${index + 1}`} data-system-step data-orbit={index % 3} key={step}>{step}</span>)}</div></div></section>
 
           <section className="complexity" data-complexity-section aria-labelledby="complexity-title">
             <div className="complexity__pin" data-complexity-pin><p className="section-label">O que você não precisa ver</p><h2 id="complexity-title" className="sr-only">Da complexidade à tranquilidade</h2><div className="complexity__words" aria-hidden="true">{complexity.map((word, index) => <span className={`complexity__word complexity__word--${index + 1}`} key={word} data-complexity-word>{word}</span>)}</div><p className="complexity__result" data-complexity-result>Tranquilidade</p><p className="complexity__explain">A DB organiza a complexidade para o cliente viver apenas o que importa</p></div>
@@ -246,11 +247,11 @@ export default function Home() {
 
           <section className="contact" id="contato" aria-labelledby="contact-title">
             <div className="container contact__headline"><p className="section-label">Uma conversa é o primeiro passo</p><h2 id="contact-title">Sua marca já tem uma identidade. Nosso trabalho é fazer as pessoas sentirem isso</h2><p>Conte o que você está planejando. O restante começa com uma conversa</p></div>
-            <div className="container contact__layout"><div className="contact__note" data-reveal><span>Estratégia</span><span>Hospitalidade</span><span>Produção</span><span>Execução</span><div className="contact__promise"><Check aria-hidden="true" size={18} /><p>Uma conversa objetiva, tratada com cuidado e discrição</p></div></div><div data-reveal><ContactForm /></div></div>
+            <div className="container contact__layout"><div className="contact__note" data-reveal><span>Estratégia</span><span>Hospitalidade</span><span>Produção</span><span>Execução</span><div className="contact__promise"><Check aria-hidden="true" size={18} /><p>Uma conversa objetiva, tratada com cuidado e discrição</p></div><div className="contact__direct"><p>Contato direto</p><a href="mailto:atendimento@danybrandao.com.br">atendimento@danybrandao.com.br</a><a href="https://wa.me/5511981614592" target="_blank" rel="noreferrer">WhatsApp · 11 98161-4592</a></div></div><div data-reveal><ContactForm /></div></div>
           </section>
         </main>
 
-        <footer className="footer"><div className="container footer__top"><Link href="/" className="brand-signature" aria-label="Dany Brandão, página inicial"><Image src="/images/Logo_Fundo_Branco-removebg-preview.png" alt="Dany Brandão" width={547} height={184} /></Link><p>DB Experience<br />Corporate Experiences<br />São Paulo</p><a href="#contato" className="text-link"><span>Conversar sobre um projeto</span><ArrowRight aria-hidden="true" size={17} /></a><a className="text-link footer__linkedin" href="https://www.linkedin.com/in/dany-brandão-b10a5ab7/" target="_blank" rel="noreferrer"><span>LinkedIn</span><ArrowUpRight aria-hidden="true" size={16} /></a></div><div className="container footer__bottom"><span>© {new Date().getFullYear()} Dany Brandão</span><span>Contato via formulário</span><span>Privacidade e discrição por princípio</span></div></footer>
+        <footer className="footer"><div className="container footer__top"><Link href="/" className="brand-signature" aria-label="Dany Brandão, página inicial"><Image src="/images/Logo_Fundo_Branco-removebg-preview.png" alt="Dany Brandão" width={547} height={184} /></Link><p>DB Experience<br />Corporate Experiences<br />São Paulo</p><div className="footer__contacts"><a href="mailto:atendimento@danybrandao.com.br">atendimento@danybrandao.com.br</a><a href="tel:+5511981614592">11 98161-4592</a></div><a className="text-link footer__linkedin" href="https://www.linkedin.com/in/dany-brandão-b10a5ab7/" target="_blank" rel="noreferrer"><span>LinkedIn</span><ArrowUpRight aria-hidden="true" size={16} /></a></div><div className="container footer__bottom"><span>© {new Date().getFullYear()} Dany Brandão</span><span>D.B EXPERIENCE SERVICOS LTDA · CNPJ 16.509.773/0001-38</span><span>Privacidade e discrição por princípio</span></div></footer>
       </SmoothExperience>
     </>
   );

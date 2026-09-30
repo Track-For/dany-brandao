@@ -83,7 +83,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
         }
 
         const sectionTitles = gsap.utils.toArray<HTMLElement>(
-          ".partners__header h2, .discretion h2, .details__header h2, .showcase__header h2, .system h2, .about__copy h2, .contact__headline h2, [data-title-reveal]",
+          ".partners__header h2, .details__header h2, .showcase__header h2, .system h2, .about__copy h2, .contact__headline h2, [data-title-reveal]",
         );
         sectionTitles.forEach((title) => {
           gsap.from(title, { y: 38, autoAlpha: 0, duration: 0.85, ease: "power3.out", scrollTrigger: { trigger: title, start: "top 88%", once: true } });
@@ -278,7 +278,76 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
         }
 
         const orbit = document.querySelector<HTMLElement>("[data-system-orbit]");
-        if (orbit) gsap.fromTo(orbit, { rotate: -3 }, { rotate: 6, ease: "none", scrollTrigger: { trigger: orbit, start: "top bottom", end: "bottom top", scrub: 1 } });
+        if (orbit) {
+          const orbitRings = gsap.utils.toArray<HTMLElement>("[data-system-ring]", orbit);
+          const orbitSteps = gsap.utils.toArray<HTMLElement>("[data-system-step]", orbit);
+          const orbitCore = orbit.querySelector<HTMLElement>("[data-system-core]");
+          const compact = window.innerWidth < 700;
+          const depth = compact ? 42 : 74;
+          const radiusRatios = compact ? [0.42, 0.29, 0.21] : [0.47, 0.315, 0.205];
+          const clamp = gsap.utils.clamp(0, 1);
+          const orbitGroups = orbitRings.map((_, orbitIndex) => orbitSteps.filter((step) => Number(step.dataset.orbit) === orbitIndex));
+          const stepSetters = new Map(orbitSteps.map((step) => [step, {
+            x: gsap.quickSetter(step, "x", "px"),
+            y: gsap.quickSetter(step, "y", "px"),
+            z: gsap.quickSetter(step, "z", "px"),
+            scale: gsap.quickSetter(step, "scale"),
+            opacity: gsap.quickSetter(step, "opacity"),
+          }]));
+
+          gsap.set(orbitSteps, { xPercent: -50, yPercent: -50, force3D: true });
+
+          const orbitStates = [
+            { phase: 0, tiltX: 62, tiltY: -10, baseTiltX: 62, baseTiltY: -10, baseZ: -depth * 0.42, direction: 1, duration: 28 },
+            { phase: 0.7, tiltX: 24, tiltY: 64, baseTiltX: 24, baseTiltY: 64, baseZ: 0, direction: 1, duration: 21 },
+            { phase: 1.4, tiltX: 53, tiltY: 30, baseTiltX: 53, baseTiltY: 30, baseZ: depth * 0.34, direction: 1, duration: 15 },
+          ];
+
+          const renderOrbit = (orbitIndex: number) => {
+            const state = orbitStates[orbitIndex];
+            const ring = orbitRings[orbitIndex];
+            const steps = orbitGroups[orbitIndex];
+            const radius = orbit.offsetWidth * radiusRatios[orbitIndex];
+            const tiltX = state.tiltX * Math.PI / 180;
+            const tiltY = state.tiltY * Math.PI / 180;
+            const cosX = Math.cos(tiltX);
+            const sinX = Math.sin(tiltX);
+            const cosY = Math.cos(tiltY);
+            const sinY = Math.sin(tiltY);
+
+            gsap.set(ring, { rotationX: state.tiltX, rotationY: state.tiltY, z: state.baseZ, transformOrigin: "50% 50%", force3D: true });
+
+            steps.forEach((step, stepIndex) => {
+              const angle = state.phase + (stepIndex / steps.length) * Math.PI * 2;
+              const localX = Math.cos(angle) * radius;
+              const localY = Math.sin(angle) * radius;
+              const rotatedY = localY * cosX;
+              const rotatedZ = localY * sinX;
+              const x = localX * cosY + rotatedZ * sinY;
+              const y = rotatedY;
+              const z = -localX * sinY + rotatedZ * cosY + state.baseZ;
+              const front = clamp((z + radius + depth) / ((radius + depth) * 2));
+              const setters = stepSetters.get(step);
+
+              setters?.x(x);
+              setters?.y(y);
+              setters?.z(z);
+              setters?.scale(0.86 + front * 0.2);
+              setters?.opacity(0.36 + front * 0.64);
+              step.style.zIndex = z > state.baseZ ? "5" : "1";
+            });
+          };
+
+          orbitStates.forEach((state, orbitIndex) => {
+            renderOrbit(orbitIndex);
+            gsap.to(state, { phase: state.phase + state.direction * Math.PI * 2, duration: state.duration, repeat: -1, ease: "none", onUpdate: () => renderOrbit(orbitIndex) });
+            gsap.to(state, { tiltX: state.baseTiltX + (orbitIndex % 2 === 0 ? 5 : -4), tiltY: state.baseTiltY + (orbitIndex % 2 === 0 ? -4 : 5), duration: 5.2 + orbitIndex, repeat: -1, yoyo: true, ease: "sine.inOut", onUpdate: () => renderOrbit(orbitIndex) });
+          });
+
+          if (orbitCore) {
+            gsap.fromTo(orbitCore, { z: -depth * 0.18, scale: 0.96 }, { z: depth * 0.32, scale: 1.05, duration: 3.6, repeat: -1, yoyo: true, ease: "sine.inOut", force3D: true });
+          }
+        }
 
         const aboutImage = document.querySelector<HTMLElement>("[data-about-image]");
         if (aboutImage) gsap.fromTo(aboutImage, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0 0)", duration: 1.1, ease: "power4.out", scrollTrigger: { trigger: aboutImage, start: "top 84%", once: true } });

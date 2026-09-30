@@ -26,6 +26,10 @@ export const metadata: Metadata = {
     description:
       "A marca, traduzida em experiência. Estratégia, hospitalidade, produção e execução em São Paulo.",
   },
+  icons: {
+    icon: [{ url: "/images/Logo_Fundo_Branco-removebg-preview.png", type: "image/png" }],
+    shortcut: ["/images/Logo_Fundo_Branco-removebg-preview.png"],
+  },
   robots: {
     index: true,
     follow: true,
