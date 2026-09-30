@@ -6,7 +6,6 @@ import { DiscretionReveal } from "@/components/discretion-reveal";
 import { SiteHeader } from "@/components/site-header";
 import { SmoothExperience } from "@/components/smooth-experience";
 import { VerticalFilm } from "@/components/vertical-film";
-import { VideoLightbox } from "@/components/video-lightbox";
 
 const method = [
   { number: "01", title: "Marca", copy: "O que precisa permanecer reconhecível em qualquer expressão dessa empresa?", image: "/images/Logo Premium.png", alt: "Assinatura oficial Premium da marca Dany Brandão", logo: true },
@@ -227,7 +226,7 @@ export default function Home() {
               <header className="container showcase__header"><p>Experiências reais / sem exposição indevida</p><h2 id="showcase-title">Experiências, sem precisar contar tudo</h2></header>
               <div className="showcase__viewport"><div className="showcase__track" data-showcase-track>
                 {showcases.map((item, index) => (
-                  <article className="showcase-card" key={item.title} data-cursor="VIEW"><div className="showcase-card__media"><Image src={item.image} alt={item.alt} fill preload={index === 0} sizes="(max-width: 1023px) 100vw, 70vw" className="cover-image" /><div className="showcase-card__scope">{item.scope.map((scope) => <span key={scope}>{scope}</span>)}</div></div><div className="showcase-card__meta"><span>{item.number}</span><h3>{item.title}</h3>{index === 0 ? <VideoLightbox src="/media/hero-production.mp4" poster="/media/hero-production-poster.jpg" /> : <ArrowUpRight aria-hidden="true" size={22} />}</div></article>
+                  <article className="showcase-card" key={item.title} data-cursor="VIEW"><div className="showcase-card__media"><Image src={item.image} alt={item.alt} fill preload={index === 0} sizes="(max-width: 1023px) 100vw, 70vw" className="cover-image" /><div className="showcase-card__scope">{item.scope.map((scope) => <span key={scope}>{scope}</span>)}</div></div><div className="showcase-card__meta"><span>{item.number}</span><h3>{item.title}</h3><ArrowUpRight aria-hidden="true" size={22} /></div></article>
                 ))}
               </div></div>
             </div>
