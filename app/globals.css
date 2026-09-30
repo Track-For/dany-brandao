@@ -147,7 +147,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .language__yellow-mark { position: absolute; z-index: 6; top: 48svh; right: 9vw; width: 14px; aspect-ratio: 1; border-radius: 50%; background: var(--pop-yellow); }
 .language__progress { position: absolute; z-index: 9; right: var(--page-gutter); bottom: 16px; left: var(--page-gutter); height: 2px; background: rgb(255 255 255 / 0.28); }
 .language__progress span { display: block; width: 100%; height: 100%; background: var(--pop-yellow); transform: scaleX(0); transform-origin: left; }
-.language-handoff { position: relative; z-index: 12; min-height: 96svh; margin-top: -20svh; padding: 31svh 0 8rem; border-radius: 50% 50% 0 0 / 18svh 18svh 0 0; background: var(--premium-cream); color: var(--premium-teal); }
+.language-handoff { position: relative; z-index: 12; min-height: 96svh; margin-top: -20svh; padding: 31svh 0 8rem; border-radius: 50% 50% 0 0 / 28svh 28svh 0 0; background: var(--premium-cream); color: var(--premium-teal); }
 .language-handoff__inner > p { margin: 0; font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.14em; text-transform: uppercase; }
 .language-handoff h2 { margin: 2rem 0 0; font-size: clamp(3.05rem, 12.8vw, 5.6rem); font-weight: 800; letter-spacing: -0.08em; line-height: 0.84; text-transform: uppercase; }
 .language-handoff h2 span { display: block; }
@@ -414,7 +414,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .language-panel__pop-copy > p { right: 32vw; bottom: 9vh; width: 24vw; font-size: 0.95rem; text-align: center; }
   .language__yellow-mark { top: 23vh; right: 39vw; width: 20px; }
   .language__progress { right: 32px; left: 32px; }
-  .language-handoff { min-height: 110svh; margin-top: -24svh; padding-top: 34svh; border-radius: 50% 50% 0 0 / 26svh 26svh 0 0; }
+  .language-handoff { min-height: 110svh; margin-top: -24svh; padding-top: 34svh; border-radius: 50% 50% 0 0 / 38svh 38svh 0 0; }
   .language-handoff h2 { font-size: clamp(5rem, 8.1vw, 9.5rem); }
   .language-handoff h2 span:first-child { max-width: none; white-space: nowrap; }
   .language-handoff h2 span:last-child { font-size: 1em; }
@@ -546,7 +546,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .language__film--one { top: 14dvh; height: 60dvh; }
   .language__film--two { top: 18dvh; height: 54dvh; }
   .language-panel__pop-copy h3 { top: 29dvh; font-size: clamp(3.8rem, 6.2vw, 5.8rem); }
-  .language-handoff { min-height: 100dvh; margin-top: -18dvh; padding: 26dvh 0 5rem; border-radius: 50% 50% 0 0 / 20dvh 20dvh 0 0; }
+  .language-handoff { min-height: 100dvh; margin-top: -18dvh; padding: 26dvh 0 5rem; border-radius: 50% 50% 0 0 / 30dvh 30dvh 0 0; }
   .language-handoff h2 { font-size: clamp(3.8rem, 6.4vw, 6rem); }
 
   .zoom-bridge__copy { padding-top: 28dvh; font-size: clamp(3.25rem, 4.6vw, 4.8rem); }
