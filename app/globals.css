@@ -111,7 +111,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .portrait-hero__copy { position: static; }
 .portrait-hero__eyebrow { position: absolute; z-index: 5; top: 1rem; left: 0; max-width: 42ch; margin: 0; color: var(--premium-teal); font-family: var(--font-mono); font-size: 0.52rem; font-weight: 700; letter-spacing: 0.11em; line-height: 1.45; text-transform: uppercase; }
 .portrait-hero__quote { position: absolute; z-index: 4; top: 9%; right: 0; left: 0; display: grid; align-items: start; margin: 0; column-gap: clamp(0.75rem, 4vw, 2rem); font-size: clamp(1.8rem, 7.8vw, 2.8rem); font-weight: 800; grid-template-columns: repeat(2, minmax(0, 1fr)); letter-spacing: -0.065em; line-height: 0.9; pointer-events: none; }
-.portrait-hero__line { position: relative; display: block; width: fit-content; max-width: 11ch; overflow: hidden; padding: 0.02em 0.025em 0.09em 0; text-wrap: balance; }
+.portrait-hero__line { position: relative; display: block; width: fit-content; max-width: 11ch; overflow: visible; padding: 0.02em 0.025em 0.09em 0; overflow-wrap: normal; text-wrap: balance; word-break: normal; }
 .portrait-hero__line:nth-child(2) { justify-self: end; color: var(--pop-pink); text-align: right; }
 .portrait-hero__text { position: relative; z-index: 1; }
 .portrait-hero__cover { position: absolute; z-index: 2; inset: 3% -1%; background: var(--pop-pink); clip-path: polygon(0 5%, 97% 0, 100% 82%, 94% 100%, 2% 94%); transform: translateX(0) scaleX(1); transform-origin: left center; }
@@ -495,8 +495,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .menu-button, .mobile-menu { display: none; }
 
   .portrait-hero__eyebrow { top: 1.5rem; font-size: 0.66rem; }
-  .portrait-hero__quote { top: 0; bottom: 0; align-items: center; padding: 4rem 0 8rem; column-gap: clamp(1.25rem, 2.5vw, 2.75rem); font-size: clamp(2.55rem, 3.5vw, 4rem); grid-template-columns: minmax(0, 1fr) min(47vw, 680px) minmax(0, 1fr); line-height: 0.88; }
-  .portrait-hero__line { max-width: 100%; white-space: normal; }
+  .portrait-hero__quote { top: 0; bottom: 0; align-items: center; padding: 4rem 0 8rem; column-gap: clamp(1.25rem, 2.5vw, 2.75rem); font-size: clamp(2.25rem, 3.1vw, 3.45rem); grid-template-columns: minmax(0, 1fr) min(47vw, 680px) minmax(0, 1fr); line-height: 0.88; }
+  .portrait-hero__line { width: 100%; max-width: none; white-space: normal; }
   .portrait-hero__line:first-child { grid-column: 1; justify-self: start; text-align: left; }
   .portrait-hero__line:nth-child(2) { grid-column: 3; justify-self: end; margin: 0; text-align: right; }
   .portrait-hero__intro { bottom: 2rem; width: min(34vw, 29rem); padding: 1.15rem 1.25rem 1.05rem; background: rgb(240 235 225 / 0.96); backdrop-filter: blur(12px); gap: 1rem; }
@@ -643,7 +643,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .brand-signature--header { width: 166px; }
   .header-cta { min-height: 38px; }
 
-  .portrait-hero__quote { font-size: clamp(3.8rem, 5.8vw, 5.4rem); }
+  .portrait-hero__quote { font-size: clamp(2.15rem, 3vw, 3.25rem); }
   .portrait-hero__visual { top: 0.5rem; width: min(43vw, 560px); }
   .portrait-hero__intro { bottom: 1rem; }
 
