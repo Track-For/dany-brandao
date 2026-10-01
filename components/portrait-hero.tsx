@@ -407,8 +407,8 @@ export function PortraitHero() {
 
             <div className="portrait-hero__intro">
               <p>
-                <strong>Experiências corporativas, da estratégia à execução.</strong>
-                <span>Dany entende produto, público e contexto para criar experiências coerentes com cada marca.</span>
+                <strong>Antes de produzir, entendemos a marca, o produto e quem será recebido</strong>
+                <span>Depois coordenamos cada detalhe, do briefing à execução, para que o cliente perceba apenas tranquilidade</span>
               </p>
               <a href="#contato" className="button portrait-hero__cta">
                 <span>Conversar sobre um projeto</span>
