@@ -18,8 +18,8 @@ const signatureFont = Allura({
 });
 
 const impactLines = [
-  "Entendemos sua marca",
-  "Traduzimos em experiência",
+  "Eventos corporativos",
+  "que traduzem sua marca",
 ];
 
 const upperPhrase = "Antes de produzir, precisamos entender.";
