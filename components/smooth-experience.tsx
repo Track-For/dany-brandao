@@ -266,12 +266,20 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
         const complexityResult = document.querySelector<HTMLElement>("[data-complexity-result]");
         if (complexity && complexityWords.length && complexityResult) {
           const isMobile = window.innerWidth < 1024;
-          const mobileWordIndexes = [0, 1, 2, 4, 7];
-          const activeWords = isMobile ? mobileWordIndexes.map((index) => complexityWords[index]).filter(Boolean) : complexityWords;
-          const inactiveWords = isMobile ? complexityWords.filter((_, index) => !mobileWordIndexes.includes(index)) : [];
-          const mobileSpread = Math.min(88, window.innerWidth * 0.22);
+          const activeWords = isMobile ? complexityWords.slice(0, 8) : complexityWords;
+          const inactiveWords = isMobile ? complexityWords.slice(8) : [];
+          const mobileSpread = Math.min(78, window.innerWidth * 0.2);
           const scatter = isMobile
-            ? [[-mobileSpread * 0.7, -190], [mobileSpread * 0.65, -112], [-mobileSpread * 0.55, -34], [mobileSpread * 0.58, 54], [0, 146]]
+            ? [
+                [-mobileSpread * 0.72, -215],
+                [mobileSpread * 0.58, -158],
+                [-mobileSpread * 0.58, -101],
+                [mobileSpread * 0.42, -44],
+                [-mobileSpread * 0.48, 18],
+                [mobileSpread * 0.52, 80],
+                [-mobileSpread * 0.38, 142],
+                [mobileSpread * 0.4, 202],
+              ]
             : [[-520, -260], [-180, -310], [220, -275], [500, -120], [-430, -65], [330, 30], [-320, 145], [30, 210], [390, 250], [-100, 315]];
           const systemSource = document.querySelector<HTMLElement>("[data-system-orbit]");
           const systemSourceSteps = systemSource ? gsap.utils.toArray<HTMLElement>("[data-system-step]", systemSource) : [];
@@ -292,8 +300,8 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
             handoffLayer.setAttribute("aria-hidden", "true");
             root.current?.appendChild(handoffLayer);
 
-            const targetIndexes = isMobile ? [0, 1, 2, 3, 4] : [6, 0, 5, 4, 7, 1, 2, 8];
-            const sourceIndexes = isMobile ? [1, 5, 6, 3, 4] : systemSourceSteps.map((_, index) => index);
+            const targetIndexes = isMobile ? [0, 1, 2, 3, 4, 5, 6, 7] : [6, 0, 5, 4, 7, 1, 2, 8];
+            const sourceIndexes = systemSourceSteps.map((_, index) => index);
             const handoffPairs = sourceIndexes.map((sourceIndex, pairIndex) => {
               const source = systemSourceSteps[sourceIndex];
               const target = activeWords[targetIndexes[pairIndex]];
@@ -321,7 +329,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
             };
             const handoffStart = () => {
               const scoreRect = systemSource.getBoundingClientRect();
-              return scoreRect.bottom + window.scrollY - window.innerHeight * 0.94;
+              return scoreRect.bottom + window.scrollY - window.innerHeight * (isMobile ? 1 : 0.94);
             };
             const sourceX = (index: number) => contentRect(handoffPairs[index].source).left;
             const sourceY = (index: number) => {
@@ -361,7 +369,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
             const handoffTimeline = gsap.timeline({
               scrollTrigger: {
                 trigger: systemSource,
-                start: "bottom 94%",
+                start: isMobile ? "bottom bottom" : "bottom 94%",
                 endTrigger: complexity,
                 end: "top top",
                 scrub: isMobile ? 0.35 : 0.8,
@@ -382,7 +390,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
               },
             });
 
-            const flowOffsets = isMobile ? [0, 0.035, 0.07, 0.02, 0.055] : [0, 0.06, 0.025, 0.085, 0.04, 0.105, 0.015, 0.075];
+            const flowOffsets = isMobile ? [0, 0.025, 0.05, 0.015, 0.04, 0.065, 0.03, 0.055] : [0, 0.06, 0.025, 0.085, 0.04, 0.105, 0.015, 0.075];
             handoffPairs.forEach((_, index) => {
               const direction = index % 2 === 0 ? -1 : 1;
               const offset = flowOffsets[index] ?? index * 0.02;

@@ -284,7 +284,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .complexity__pin > .section-label { position: absolute; top: calc(var(--header-height) + 1.1rem); left: var(--page-gutter); }
 .complexity__words { position: absolute; inset: 0; }
 .complexity__word { position: absolute; top: 50%; left: 50%; color: rgb(65 138 144 / 0.82); font-size: clamp(0.8rem, 4.1vw, 1.1rem); font-weight: 700; letter-spacing: -0.03em; text-transform: uppercase; white-space: nowrap; will-change: transform, opacity; }
-.complexity__word:nth-child(n+6) { display: none; }
+.complexity__word:nth-child(n+9) { display: none; }
 .complexity__result { z-index: 2; width: 100%; max-width: 100%; margin: 0; padding-inline: var(--page-gutter); color: var(--pop-pink); font-size: clamp(3.4rem, 16vw, 6rem); font-weight: 800; letter-spacing: -0.085em; line-height: 0.9; text-align: center; text-wrap: balance; transform-origin: center; visibility: hidden; opacity: 0; will-change: transform, opacity; }
 .complexity__explain { position: absolute; right: var(--page-gutter); bottom: 2rem; left: var(--page-gutter); margin: 0; color: rgb(65 138 144 / 0.76); font-size: 0.76rem; line-height: 1.5; text-align: center; }
 
