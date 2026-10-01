@@ -63,7 +63,7 @@ export default function Home() {
         <main id="conteudo">
           <PortraitHero />
 
-          <section className="partners" id="parceiros" data-partners-section aria-labelledby="partners-title">
+          {/* <section className="partners" id="parceiros" data-partners-section aria-labelledby="partners-title">
             <header className="container partners__header"><h2 id="partners-title">Parcerias também constroem a experiência</h2><p>Um espaço preparado para receber as marcas parceiras da DB. As identidades abaixo são provisórias</p></header>
             <div className="partners__rows" aria-label="Espaços provisórios para marcas parceiras">
               {partnerRows.map((row, rowIndex) => (
@@ -78,7 +78,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
-          </section>
+          </section> */}
 
           <section className="language" id="linguagens" data-language-section aria-labelledby="language-title">
             <div className="language__pin" data-language-pin>
@@ -195,7 +195,7 @@ export default function Home() {
           </section>
 
           <section className="manifesto" data-manifesto-section aria-labelledby="manifesto-title">
-            <div className="manifesto__pin" data-manifesto-pin><VerticalFilm src="/media/manifesto-event.mp4" poster="/media/manifesto-event-poster.jpg" objectPosition="center 44%" className="manifesto__film" ariaLabel="Recepção e bastidores de uma experiência corporativa real" /><div className="manifesto__overlay" /><div className="container manifesto__copy"><h2 id="manifesto-title"><span data-manifesto-line>Você não precisa pensar em cada detalhe</span><span data-manifesto-line>Nós pensamo por você</span></h2></div></div>
+            <div className="manifesto__pin" data-manifesto-pin><VerticalFilm src="/media/manifesto-event.mp4" poster="/media/manifesto-event-poster.jpg" objectPosition="center 44%" className="manifesto__film" ariaLabel="Recepção e bastidores de uma experiência corporativa real" /><div className="manifesto__overlay" /><div className="container manifesto__copy"><h2 id="manifesto-title"><span data-manifesto-line>Você não precisa pensar em cada detalhe</span><span data-manifesto-line>Nós pensamos por você</span></h2></div></div>
           </section>
 
           <section className="about" id="sobre" aria-labelledby="about-title"><div className="container about__layout"><figure className="about__portrait" data-about-image data-cursor="DETAIL"><Image src="/media/Mood do sábado à noite... Gastronomia coreana adaptado para o Brasil ministrado pelo mestre _pauloshin. Uma experiência de mesas com grelhas embutidas. E(.jpg.jpeg" alt="Dany Brandão acompanhando pessoalmente uma experiência" fill sizes="(max-width: 1023px) 100vw, 42vw" className="cover-image" /><span className="about__shape about__shape--one" aria-hidden="true" /><span className="about__shape about__shape--two" aria-hidden="true" /></figure><div className="about__copy"><p className="section-label">Sobre Dany</p><h2 id="about-title">Um olhar treinado para perceber o que muitas vezes passa despercebido</h2><p data-reveal>A trajetória de Dany no universo artístico desenvolveu sensibilidade para estética, comportamento, presença e experiência</p><p data-reveal>Hoje, esse olhar se combina com planejamento, produção e operação na criação de experiências corporativas coerentes com cada marca</p><a className="about__social" href="https://www.linkedin.com/in/dany-brandão-b10a5ab7/" target="_blank" rel="noreferrer"><span className="about__social-mark" aria-hidden="true">in</span><span>Conhecer o LinkedIn da Dany</span><ArrowUpRight aria-hidden="true" size={16} /></a></div></div></section>
