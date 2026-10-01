@@ -8,7 +8,7 @@ import { SmoothExperience } from "@/components/smooth-experience";
 import { VerticalFilm } from "@/components/vertical-film";
 
 const method = [
-  { number: "01", title: "Marca", copy: "O que precisa permanecer reconhecível em qualquer expressão dessa empresa?", image: "/images/Logo Premium.png", alt: "Assinatura oficial Premium da marca Dany Brandão", logo: true },
+  { number: "01", title: "Marca", copy: "O que precisa permanecer reconhecível em qualquer expressão dessa empresa?", image: "/images/Logo_Fundo_Branco-removebg-preview.png", alt: "Assinatura colorida da marca Dany Brandão", logo: true },
   { number: "02", title: "Produto", copy: "O que está sendo apresentado, celebrado ou comunicado?", image: "/media/detail-material.jpg", alt: "Equipamentos e materiais preparados para uma experiência" },
   { number: "03", title: "Público", copy: "Quem estará presente e o que essas pessoas precisam perceber?", image: "/media/detail-arrival.jpg", alt: "Equipe recebendo convidados em um evento corporativo" },
   { number: "04", title: "Contexto", copy: "Por que esse encontro existe e que momento da marca ele representa?", image: "/media/crachas.png", alt: "Detalhe arquitetônico observado durante a preparação de um evento" },
@@ -47,10 +47,8 @@ const complexity = ["RSVP", "Logística", "Produção", "Montagem", "Credenciame
 const heroMoments = [
   "A marca dá o tom",
   "A chegada cria presença",
-  "O cuidado muda o ritmo",
-  "Cada detalhe comunica",
+  "O cuidado está nos detalhes",
   "A experiência faz sentir",
-  "Tudo começa pela escuta",
 ];
 
 const organizationJsonLd = {
@@ -69,7 +67,7 @@ export default function Home() {
       <SiteHeader />
       <SmoothExperience>
         <main id="conteudo">
-          <section className="hero-scroll" data-hero-section data-hero-duration="4.58" aria-labelledby="hero-title">
+          <section className="hero-scroll" data-hero-section data-hero-duration="4.58" data-hero-fps="24" aria-labelledby="hero-title">
             <div className="hero-scroll__pin" data-hero-pin>
               <video
                 className="hero-scroll__video"
@@ -78,10 +76,11 @@ export default function Home() {
                 playsInline
                 preload="auto"
                 poster="/videos/video-hero-poster.jpg"
-                aria-label="Uma experiência corporativa construída em seis momentos"
+                aria-label="Uma experiência corporativa construída em quatro momentos"
               >
-                <source src="/videos/video-hero.mp4" type='video/mp4; codecs="hvc1"' />
+                <source src="/videos/video-hero-scrub.mp4" type='video/mp4; codecs="avc1.640028"' />
                 <source src="/videos/video-hero-web.mp4" type='video/mp4; codecs="avc1.42E01E"' />
+                <source src="/videos/video-hero.mp4" type='video/mp4; codecs="hvc1"' />
               </video>
               <div className="hero-scroll__veil" data-hero-veil aria-hidden="true" />
               <div className="hero-scroll__grain" aria-hidden="true" />
@@ -133,7 +132,7 @@ export default function Home() {
                   <p className="language-panel__index">01 / Clássico</p>
                   <h2 id="language-title"><span>Clássico</span> não é parado</h2>
                   <p className="language-panel__lead">É saber o que deve permanecer</p>
-                  <figure className="language-panel__classic-media" data-language-media><Image src="/media/saxofone.png" alt="Detalhe clássico de arquitetura observado em um projeto real" fill sizes="(max-width: 1023px) 74vw, 38vw" className="cover-image" /></figure>
+                  <div className="language-panel__classic-media" data-language-media><VerticalFilm src="/videos/saxofone.mp4" poster="/media/saxofone.png" className="language-panel__classic-film" ariaLabel="Detalhe clássico observado em um projeto real" /></div>
                 </article>
 
                 <article className="language-panel language-panel--transform" data-language-panel>
@@ -197,7 +196,7 @@ export default function Home() {
                   <div className="container details__header"><p className="section-label">O que sustenta a percepção</p><h2 id="details-title"><span className="details__title-primary">O todo é percebido</span><span className="details__title-secondary">Os detalhes constroem</span></h2><p>A leitura acontece por inteiro. O cuidado se revela em camadas</p></div>
                 </header>
                 <article className="details__panel details__panel--direction">
-                  <figure className="details__curtain" data-detail-curtain data-cursor="DETAIL"><Image src="/media/dany-portrait.jpg" alt="Dany orientando a preparação de um ambiente" fill sizes="(max-width: 1023px) 100vw, 72vw" className="cover-image" /></figure>
+                  <div className="details__curtain" data-detail-curtain data-cursor="DETAIL"><VerticalFilm src="/videos/Dany.mp4" poster="/media/dany-portrait.jpg" className="details__film" ariaLabel="Dany orientando a preparação de um ambiente" /></div>
                   <p>Direção antes da chegada</p>
                 </article>
                 <article className="details__panel details__panel--reel">
@@ -207,7 +206,7 @@ export default function Home() {
                   <p>O cuidado aparece no que o cliente nem precisa acompanhar</p>
                 </article>
                 <article className="details__panel details__panel--context">
-                  <figure className="details__curtain" data-detail-curtain data-cursor="DETAIL"><Image src="/media/Leitura do Lugar.png" alt="Vitral e textura arquitetônica do espaço" fill sizes="(max-width: 1023px) 100vw, 62vw" className="cover-image" /></figure>
+                  <div className="details__curtain" data-detail-curtain data-cursor="DETAIL"><VerticalFilm src="/videos/Cada lugar pede uma leitura.mp4" poster="/media/Leitura do Lugar.png" className="details__film" ariaLabel="Leitura do espaço e de seus detalhes arquitetônicos" /></div>
                   <p>Cada lugar pede uma leitura</p>
                 </article>
                 <article className="details__panel details__panel--operation">
@@ -235,7 +234,7 @@ export default function Home() {
           <section className="system" aria-labelledby="system-title"><div className="container system__layout"><div><p className="section-label">Visão 360°</p><h2 id="system-title">Enquanto o convidado vê o evento, nós vemos todo o sistema</h2></div><div className="system__orbit" data-system-orbit aria-label="Etapas coordenadas pela DB Experience"><div className="system__orbit-scene" aria-hidden="true"><span className="system__ring system__ring--outer" data-system-ring /><span className="system__ring system__ring--middle" data-system-ring /><span className="system__ring system__ring--inner" data-system-ring /></div><span className="system__core" data-system-core><span className="system__center">Uma experiência</span></span>{systemSteps.map((step, index) => <span className={`system__step system__step--${index + 1}`} data-system-step data-orbit={index % 3} key={step}>{step}</span>)}</div></div></section>
 
           <section className="complexity" data-complexity-section aria-labelledby="complexity-title">
-            <div className="complexity__pin" data-complexity-pin><p className="section-label">O que você não precisa ver</p><h2 id="complexity-title" className="sr-only">Da complexidade à tranquilidade</h2><div className="complexity__words" aria-hidden="true">{complexity.map((word, index) => <span className={`complexity__word complexity__word--${index + 1}`} key={word} data-complexity-word>{word}</span>)}</div><p className="complexity__result" data-complexity-result>Tranquilidade</p><p className="complexity__explain">A DB organiza a complexidade para o cliente viver apenas o que importa</p></div>
+            <div className="complexity__pin" data-complexity-pin><p className="section-label">O que você não precisa ver</p><h2 id="complexity-title" className="sr-only">Da complexidade à tranquilidade</h2><div className="complexity__words" aria-hidden="true">{complexity.map((word, index) => <span className={`complexity__word complexity__word--${index + 1}`} key={word} data-complexity-word>{word}</span>)}</div><p className="complexity__result" data-complexity-result>Entregamos Tranquilidade</p><p className="complexity__explain">A DB organiza a complexidade para o cliente viver apenas o que importa</p></div>
           </section>
 
           <section className="manifesto" data-manifesto-section aria-labelledby="manifesto-title">

@@ -22,6 +22,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
       let ticker: ((time: number) => void) | null = null;
       let heroVideo: HTMLVideoElement | null = null;
       let syncHeroVideo: (() => void) | null = null;
+      let heroSeekFrame: number | null = null;
       const interactionCleanups: Array<() => void> = [];
 
       if (!reducedMotion && pointerFine && window.innerWidth >= 1024) {
@@ -40,25 +41,39 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
         const heroVeil = document.querySelector<HTMLElement>("[data-hero-veil]");
         if (hero && heroVideo && heroChapters.length) {
           const duration = Number(hero.dataset.heroDuration) || 4.58;
+          const framesPerSecond = Number(hero.dataset.heroFps) || 24;
+          const frameDuration = 1 / framesPerSecond;
           const playhead = { time: 0 };
+          let targetTime = 0;
           syncHeroVideo = () => {
             if (!heroVideo || heroVideo.readyState < 1) return;
-            const target = Math.min(Math.max(0, playhead.time), Math.max(0, heroVideo.duration - 0.03));
-            if (Math.abs(heroVideo.currentTime - target) > 0.012) heroVideo.currentTime = target;
+            const clampedTime = Math.min(Math.max(0, playhead.time), Math.max(0, heroVideo.duration - frameDuration));
+            targetTime = Math.round(clampedTime * framesPerSecond) / framesPerSecond;
+            if (heroSeekFrame !== null) return;
+
+            heroSeekFrame = window.requestAnimationFrame(() => {
+              heroSeekFrame = null;
+              if (!heroVideo || heroVideo.readyState < 1) return;
+              if (Math.abs(heroVideo.currentTime - targetTime) >= frameDuration * 0.5) {
+                heroVideo.currentTime = targetTime;
+              }
+            });
           };
 
           heroVideo.pause();
           heroVideo.addEventListener("loadedmetadata", syncHeroVideo);
+          heroVideo.addEventListener("seeked", syncHeroVideo);
           gsap.set(heroChapters, { y: 32, autoAlpha: 0 });
           gsap.set(heroChapters[0], { y: 0, autoAlpha: 1 });
           gsap.set(heroProgress, { scaleX: 0 });
+          const timelineDuration = heroChapters.length;
 
           const heroTimeline = gsap.timeline({
             scrollTrigger: {
               trigger: hero,
               start: "top top",
               end: () => `+=${Math.max(window.innerHeight, hero.offsetHeight - window.innerHeight * 2)}`,
-              scrub: 1.35,
+              scrub: 0.12,
               invalidateOnRefresh: true,
               onEnter: () => heroVideo?.pause(),
               onEnterBack: () => heroVideo?.pause(),
@@ -66,9 +81,9 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
           });
 
           heroTimeline
-            .to(playhead, { time: duration, duration: 6, ease: "none", onUpdate: syncHeroVideo }, 0)
-            .to(heroVideo, { scale: 1, duration: 6, ease: "none" }, 0);
-          if (heroVeil) heroTimeline.to(heroVeil, { opacity: 0.72, duration: 6, ease: "none" }, 0);
+            .to(playhead, { time: duration, duration: timelineDuration, ease: "none", onUpdate: syncHeroVideo }, 0)
+            .to(heroVideo, { scale: 1, duration: timelineDuration, ease: "none" }, 0);
+          if (heroVeil) heroTimeline.to(heroVeil, { opacity: 0.72, duration: timelineDuration, ease: "none" }, 0);
 
           heroProgress.forEach((bar, index) => {
             heroTimeline.to(bar, { scaleX: 1, duration: 0.88, ease: "none" }, index);
@@ -134,7 +149,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
           if (languageProgress) languageTl.fromTo(languageProgress, { scaleX: 0 }, { scaleX: 1, duration: 1, ease: "none" }, 0);
           languageTl
             .to(languageTrack, { x: () => -distance(), duration: 1, ease: "none" }, 0)
-            .to(".language-panel__classic-media img", { scale: 1.1, xPercent: -3, duration: 0.34, ease: "none" }, 0)
+            .to(".language-panel__classic-media video", { scale: 1.1, xPercent: -3, duration: 0.34, ease: "none" }, 0)
             .fromTo(".language-panel__transform-media", { clipPath: "inset(10% 14%)", scale: 0.92 }, { clipPath: "inset(0% 0%)", scale: 1, duration: 0.32, ease: "power2.inOut" }, 0.28)
             .to(popFilms, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.3, stagger: 0.05, ease: "power3.inOut" }, 0.62)
             .fromTo(".language-panel__pop-copy", { y: 38, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.23, ease: "power3.out" }, 0.7);
@@ -251,10 +266,12 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
         const complexityResult = document.querySelector<HTMLElement>("[data-complexity-result]");
         if (complexity && complexityWords.length && complexityResult) {
           const isMobile = window.innerWidth < 1024;
-          const activeWords = isMobile ? complexityWords.slice(0, 5) : complexityWords;
-          const inactiveWords = isMobile ? complexityWords.slice(5) : [];
+          const mobileWordIndexes = [0, 1, 2, 4, 7];
+          const activeWords = isMobile ? mobileWordIndexes.map((index) => complexityWords[index]).filter(Boolean) : complexityWords;
+          const inactiveWords = isMobile ? complexityWords.filter((_, index) => !mobileWordIndexes.includes(index)) : [];
+          const mobileSpread = Math.min(88, window.innerWidth * 0.22);
           const scatter = isMobile
-            ? [[-112, -224], [92, -154], [-96, -48], [102, 66], [-24, 184]]
+            ? [[-mobileSpread * 0.7, -190], [mobileSpread * 0.65, -112], [-mobileSpread * 0.55, -34], [mobileSpread * 0.58, 54], [0, 146]]
             : [[-520, -260], [-180, -310], [220, -275], [500, -120], [-430, -65], [330, 30], [-320, 145], [30, 210], [390, 250], [-100, 315]];
           const systemSource = document.querySelector<HTMLElement>("[data-system-orbit]");
           const systemSourceSteps = systemSource ? gsap.utils.toArray<HTMLElement>("[data-system-step]", systemSource) : [];
@@ -263,7 +280,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
           const complexityPin = complexity.querySelector<HTMLElement>("[data-complexity-pin]");
           const hasHandoff = Boolean(systemSource && systemSourceSteps.length && complexityPin);
 
-          gsap.set(activeWords, { xPercent: -50, yPercent: -50, x: (index) => scatter[index][0], y: (index) => scatter[index][1], rotate: (index) => (index % 2 ? 4 : -4), autoAlpha: hasHandoff ? 0 : 1 });
+          gsap.set(activeWords, { xPercent: -50, yPercent: -50, x: (index) => scatter[index][0], y: (index) => scatter[index][1], rotate: (index) => hasHandoff ? 0 : (index % 2 ? 4 : -4), autoAlpha: hasHandoff ? 0 : 1 });
           if (inactiveWords.length) gsap.set(inactiveWords, { autoAlpha: 0 });
           gsap.set(complexityResult, { scale: 0.82, autoAlpha: 0 });
           let animatedComplexityWords = activeWords;
@@ -275,17 +292,22 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
             handoffLayer.setAttribute("aria-hidden", "true");
             root.current?.appendChild(handoffLayer);
 
-            const targetIndexes = isMobile ? [3, 0, 4, 1, 2] : [6, 0, 5, 4, 7, 1, 2, 8];
-            const sourceIndexes = isMobile ? [0, 1, 3, 5, 6] : systemSourceSteps.map((_, index) => index);
+            const targetIndexes = isMobile ? [0, 1, 2, 3, 4] : [6, 0, 5, 4, 7, 1, 2, 8];
+            const sourceIndexes = isMobile ? [1, 5, 6, 3, 4] : systemSourceSteps.map((_, index) => index);
             const handoffPairs = sourceIndexes.map((sourceIndex, pairIndex) => {
               const source = systemSourceSteps[sourceIndex];
               const target = activeWords[targetIndexes[pairIndex]];
               const word = document.createElement("span");
+              const sourceFontSize = Number.parseFloat(window.getComputedStyle(source).fontSize);
+              const targetStyle = window.getComputedStyle(target);
+              const targetFontSize = Number.parseFloat(targetStyle.fontSize);
+              const renderFontSize = Math.max(sourceFontSize, targetFontSize);
               word.className = "system-handoff-word";
               word.textContent = source.textContent;
-              word.style.fontSize = window.getComputedStyle(source).fontSize;
+              word.style.fontSize = `${renderFontSize}px`;
+              word.style.fontWeight = targetStyle.fontWeight;
               handoffLayer.appendChild(word);
-              return { source, target, word };
+              return { source, target, word, sourceFontSize, targetFontSize, renderFontSize };
             }).filter((pair) => pair.source && pair.target);
             const handoffWords = handoffPairs.map((pair) => pair.word);
             animatedComplexityWords = handoffWords;
@@ -316,19 +338,20 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
               const targetRect = handoffPairs[index].target.getBoundingClientRect();
               return targetRect.top - pinRect.top;
             };
-            const targetScale = (index: number) => {
-              const sourceRect = contentRect(handoffPairs[index].source);
-              const targetRect = handoffPairs[index].target.getBoundingClientRect();
-              return gsap.utils.clamp(0.82, 1.9, targetRect.height / Math.max(sourceRect.height, 1));
-            };
+            const sourceScale = (index: number) => handoffPairs[index].sourceFontSize / handoffPairs[index].renderFontSize;
+            const targetScale = (index: number) => handoffPairs[index].targetFontSize / handoffPairs[index].renderFontSize;
             const activateHandoff = () => {
+              systemSource.classList.add("is-handoff-active");
               gsap.set(handoffLayer, { autoAlpha: 1 });
-              gsap.set(handoffWords, { autoAlpha: 1, willChange: "transform, opacity" });
+              // Keeping these glyphs out of a forced compositor layer lets the
+              // browser re-rasterize them as their scale changes, avoiding blur.
+              gsap.set(handoffWords, { autoAlpha: 1, willChange: "auto" });
               gsap.set(systemSourceSteps, { autoAlpha: 0 });
               gsap.set([systemSourceCore, systemSourceGuide].filter(Boolean), { autoAlpha: 0 });
               gsap.set(activeWords, { autoAlpha: 0 });
             };
             const deactivateHandoff = () => {
+              systemSource.classList.remove("is-handoff-active");
               gsap.set(handoffLayer, { autoAlpha: 0 });
               gsap.set(handoffWords, { autoAlpha: 0, willChange: "auto" });
             };
@@ -341,7 +364,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
                 start: "bottom 94%",
                 endTrigger: complexity,
                 end: "top top",
-                scrub: 0.8,
+                scrub: isMobile ? 0.35 : 0.8,
                 invalidateOnRefresh: true,
                 onEnter: activateHandoff,
                 onLeave: () => {
@@ -363,22 +386,31 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
             handoffPairs.forEach((_, index) => {
               const direction = index % 2 === 0 ? -1 : 1;
               const offset = flowOffsets[index] ?? index * 0.02;
+              const flightScale = () => {
+                const start = sourceScale(index);
+                return start + (targetScale(index) - start) * 0.22;
+              };
+              const flightX = () => sourceX(index) + (targetX(index) - sourceX(index)) * (isMobile ? 0.46 : 0.16) + direction * (isMobile ? 6 : 22);
+              const flightY = () => sourceY(index) + (targetY(index) - sourceY(index)) * (isMobile ? 0.48 : 0.12) + (isMobile ? 18 : -28);
               handoffTimeline
-                .fromTo(handoffWords[index], { x: () => sourceX(index), y: () => sourceY(index), scale: 1, rotation: 0, color: "#f0ebe1", force3D: true }, { x: () => sourceX(index) + (targetX(index) - sourceX(index)) * 0.16 + direction * 22, y: () => sourceY(index) + (targetY(index) - sourceY(index)) * 0.12 - 28, scale: 1.045, rotation: direction * 2.2, duration: 0.24, ease: "power2.out", force3D: true }, offset)
-                .to(handoffWords[index], { x: () => targetX(index), y: () => targetY(index), scale: () => targetScale(index), rotation: targetIndexes[index] % 2 ? 4 : -4, color: "#418a90", duration: 0.76, ease: "power3.inOut", force3D: true }, offset + 0.24);
+                .fromTo(handoffWords[index], { x: () => sourceX(index), y: () => sourceY(index), scale: () => sourceScale(index), rotation: 0, color: "#f0ebe1", force3D: false }, { x: flightX, y: flightY, scale: flightScale, rotation: 0, duration: isMobile ? 0.34 : 0.24, ease: "power2.out", force3D: false }, offset)
+                .to(handoffWords[index], { x: () => targetX(index), y: () => targetY(index), scale: () => targetScale(index), rotation: 0, color: "#418a90", duration: isMobile ? 0.66 : 0.76, ease: "power3.inOut", force3D: false }, offset + (isMobile ? 0.34 : 0.24));
             });
 
-            interactionCleanups.push(() => handoffLayer.remove());
+            interactionCleanups.push(() => {
+              systemSource.classList.remove("is-handoff-active");
+              handoffLayer.remove();
+            });
           }
 
           const pause = { progress: 0 };
           const assembledX = (index: number) => usesHandoffLayer ? window.innerWidth / 2 - animatedComplexityWords[index].offsetWidth / 2 : 0;
           const assembledY = (index: number) => usesHandoffLayer ? window.innerHeight / 2 - animatedComplexityWords[index].offsetHeight / 2 : 0;
-          gsap.timeline({ scrollTrigger: { trigger: complexity, start: "top top", end: "bottom bottom", scrub: 0.75, invalidateOnRefresh: true } })
+          gsap.timeline({ scrollTrigger: { trigger: complexity, start: "top top", end: "bottom bottom", scrub: isMobile ? 0.35 : 0.75, invalidateOnRefresh: true } })
             .to(pause, { progress: 1, duration: 0.34, ease: "none" })
-            .to(animatedComplexityWords, { x: assembledX, y: assembledY, rotate: 0, scale: 0.82, color: "#418a90", duration: 0.68, stagger: 0.018, ease: "power2.inOut" })
+            .to(animatedComplexityWords, { x: assembledX, y: assembledY, rotate: 0, scale: 0.82, color: "#418a90", duration: 0.68, stagger: 0.018, ease: "power2.inOut", force3D: false })
             .to(pause, { progress: 2, duration: 0.18, ease: "none" })
-            .to(animatedComplexityWords, { scale: 0.08, autoAlpha: 0, duration: 0.3, stagger: 0.012, ease: "power3.in" })
+            .to(animatedComplexityWords, { scale: 0.08, autoAlpha: 0, duration: 0.3, stagger: 0.012, ease: "power3.in", force3D: false })
             .fromTo(complexityResult, { scale: 0.82, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.3, ease: "power3.out" }, "-=0.04");
         }
 
@@ -502,7 +534,11 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
       return () => {
         anchorLinks.forEach((link) => link.removeEventListener("click", handleAnchor));
         interactionCleanups.forEach((cleanup) => cleanup());
-        if (heroVideo && syncHeroVideo) heroVideo.removeEventListener("loadedmetadata", syncHeroVideo);
+        if (heroVideo && syncHeroVideo) {
+          heroVideo.removeEventListener("loadedmetadata", syncHeroVideo);
+          heroVideo.removeEventListener("seeked", syncHeroVideo);
+        }
+        if (heroSeekFrame !== null) window.cancelAnimationFrame(heroSeekFrame);
         responsive.revert();
         if (ticker) gsap.ticker.remove(ticker);
         lenis?.destroy();
