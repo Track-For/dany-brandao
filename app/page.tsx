@@ -6,6 +6,7 @@ import { DiscretionReveal } from "@/components/discretion-reveal";
 import { SiteHeader } from "@/components/site-header";
 import { SmoothExperience } from "@/components/smooth-experience";
 import { VerticalFilm } from "@/components/vertical-film";
+import { PortraitHero } from "@/components/portrait-hero";
 
 const method = [
   { number: "01", title: "Marca", copy: "O que precisa permanecer reconhecível em qualquer expressão dessa empresa?", image: "/images/Logo_Fundo_Branco-removebg-preview.png", alt: "Assinatura colorida da marca Dany Brandão", logo: true },
@@ -44,13 +45,6 @@ const partnerRows = [
 const systemSteps = ["Briefing", "RSVP", "Fornecedores", "Credenciamento", "Hospitalidade", "Logística", "Produção", "Execução"];
 const complexity = ["RSVP", "Logística", "Produção", "Montagem", "Credenciamento", "Fornecedores", "Cronograma", "Hospitalidade", "Operação", "Imprevistos"];
 
-const heroMoments = [
-  "A marca dá o tom",
-  "A chegada cria presença",
-  "O cuidado está nos detalhes",
-  "A experiência faz sentir",
-];
-
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": ["Organization", "ProfessionalService"],
@@ -67,51 +61,7 @@ export default function Home() {
       <SiteHeader />
       <SmoothExperience>
         <main id="conteudo">
-          <section className="hero-scroll" data-hero-section data-hero-duration="4.58" data-hero-fps="24" aria-labelledby="hero-title">
-            <div className="hero-scroll__pin" data-hero-pin>
-              <video
-                className="hero-scroll__video"
-                data-hero-video
-                muted
-                playsInline
-                preload="auto"
-                poster="/videos/video-hero-poster.jpg"
-                aria-label="Uma experiência corporativa construída em quatro momentos"
-              >
-                <source src="/videos/video-hero-scrub.mp4" type='video/mp4; codecs="avc1.640028"' />
-                <source src="/videos/video-hero-web.mp4" type='video/mp4; codecs="avc1.42E01E"' />
-                <source src="/videos/video-hero.mp4" type='video/mp4; codecs="hvc1"' />
-              </video>
-              <div className="hero-scroll__veil" data-hero-veil aria-hidden="true" />
-              <div className="hero-scroll__grain" aria-hidden="true" />
-              <div className="hero-scroll__chrome" aria-hidden="true">
-                <span>DB Experience</span>
-                <span>Experiências corporativas</span>
-              </div>
-              <h1 id="hero-title" className="sr-only">Experiências corporativas que transformam a identidade da marca em algo que se sente.</h1>
-              <div className="hero-scroll__moments">
-                {heroMoments.map((moment, index) => (
-                  <div className="hero-scroll__moment" data-hero-chapter key={moment}>
-                    <p className="hero-scroll__statement" aria-hidden="true">{moment}</p>
-                    {index === 0 ? (
-                      <p className="hero-scroll__definition">
-                        Planejamento, produção, hospitalidade e execução de experiências corporativas construídas a partir da identidade de cada marca.
-                      </p>
-                    ) : null}
-                    {index === heroMoments.length - 1 ? (
-                      <a href="#contato" className="button hero-scroll__cta">
-                        <span>Conversar sobre um projeto</span>
-                        <ArrowUpRight aria-hidden="true" size={17} />
-                      </a>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-              <div className="hero-scroll__progress" data-hero-progress aria-hidden="true">
-                {heroMoments.map((moment) => <span key={moment}><i /></span>)}
-              </div>
-            </div>
-          </section>
+          <PortraitHero />
 
           <section className="partners" id="parceiros" data-partners-section aria-labelledby="partners-title">
             <header className="container partners__header"><h2 id="partners-title">Parcerias também constroem a experiência</h2><p>Um espaço preparado para receber as marcas parceiras da DB. As identidades abaixo são provisórias</p></header>
