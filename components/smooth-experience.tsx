@@ -202,6 +202,22 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
             const detailsProgress = document.querySelector<HTMLElement>("[data-details-progress]");
             const distance = () => Math.max(0, detailsTrack.scrollWidth - window.innerWidth);
             gsap.set(curtains, { clipPath: "inset(0% 0% 100% 0%)" });
+            curtains.forEach((curtain) => {
+              const fabric = curtain.querySelector<HTMLElement>("[data-film-curtain]");
+              const film = curtain.querySelector<HTMLElement>(".vertical-film");
+              if (!fabric || !film) return;
+              gsap.set(fabric, { scaleY: 0, yPercent: 0, autoAlpha: 1, transformOrigin: "top center" });
+              gsap.set(film, { scale: 1.075, yPercent: 4.5, transformOrigin: "center center" });
+            });
+            const setCurtainPerformance = (active: boolean) => {
+              curtains.forEach((curtain) => {
+                curtain.style.willChange = active ? "clip-path, transform" : "auto";
+                const fabric = curtain.querySelector<HTMLElement>("[data-film-curtain]");
+                const film = curtain.querySelector<HTMLElement>(".vertical-film");
+                if (fabric) fabric.style.willChange = active ? "transform" : "auto";
+                if (film) film.style.willChange = active ? "transform" : "auto";
+              });
+            };
             const detailsTimeline = gsap.timeline({
               scrollTrigger: {
                 trigger: detailsPin,
@@ -210,12 +226,24 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
                 pin: true,
                 scrub: 1.1,
                 invalidateOnRefresh: true,
+                onEnter: () => setCurtainPerformance(true),
+                onEnterBack: () => setCurtainPerformance(true),
+                onLeave: () => setCurtainPerformance(false),
+                onLeaveBack: () => setCurtainPerformance(false),
               },
             });
             detailsTimeline.to(detailsTrack, { x: () => -distance(), duration: 1, ease: "none" }, 0);
             if (detailsProgress) detailsTimeline.fromTo(detailsProgress, { scaleX: 0 }, { scaleX: 1, duration: 1, ease: "none" }, 0);
             curtains.forEach((curtain, index) => {
-              detailsTimeline.to(curtain, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.16, ease: "power3.inOut" }, 0.03 + index * 0.22);
+              const at = 0.04 + index * 0.205;
+              const fabric = curtain.querySelector<HTMLElement>("[data-film-curtain]");
+              const film = curtain.querySelector<HTMLElement>(".vertical-film");
+              detailsTimeline.to(curtain, { clipPath: "inset(0% 0% 0% 0%)", duration: fabric ? 0.14 : 0.18, ease: "power3.inOut" }, at);
+              if (!fabric || !film) return;
+              detailsTimeline
+                .to(fabric, { scaleY: 1, duration: 0.14, ease: "power3.inOut" }, at)
+                .to(fabric, { yPercent: 102, duration: 0.16, ease: "power4.inOut" }, at + 0.14)
+                .to(film, { scale: 1, yPercent: 0, duration: 0.24, ease: "power3.out" }, at + 0.08);
             });
           }
 
@@ -246,7 +274,35 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
           });
 
           gsap.utils.toArray<HTMLElement>("[data-detail-curtain]").forEach((media) => {
-            gsap.fromTo(media, { clipPath: "inset(0% 0% 100% 0%)", y: 22 }, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: media, start: "top 82%", once: true } });
+            const fabric = media.querySelector<HTMLElement>("[data-film-curtain]");
+            const film = media.querySelector<HTMLElement>(".vertical-film");
+            if (!fabric || !film) {
+              gsap.fromTo(media, { clipPath: "inset(0% 0% 100% 0%)", y: 22 }, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: media, start: "top 82%", once: true } });
+              return;
+            }
+
+            gsap.set(media, { clipPath: "inset(0% 0% 100% 0%)", y: 24 });
+            gsap.set(fabric, { scaleY: 0, yPercent: 0, autoAlpha: 1, transformOrigin: "top center" });
+            gsap.set(film, { scale: 1.075, yPercent: 4.5, transformOrigin: "center center" });
+            gsap.timeline({
+              scrollTrigger: {
+                trigger: media,
+                start: "top 84%",
+                end: "bottom 16%",
+                toggleActions: "play none none reverse",
+                invalidateOnRefresh: true,
+                onToggle: (self) => {
+                  const willChange = self.isActive ? "transform" : "auto";
+                  media.style.willChange = self.isActive ? "clip-path, transform" : "auto";
+                  fabric.style.willChange = willChange;
+                  film.style.willChange = willChange;
+                },
+              },
+            })
+              .to(media, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 0.62, ease: "power3.inOut", overwrite: "auto" }, 0)
+              .to(fabric, { scaleY: 1, duration: 0.56, ease: "power3.inOut", overwrite: "auto" }, 0)
+              .to(fabric, { yPercent: 102, duration: 0.72, ease: "power4.inOut", overwrite: "auto" }, 0.48)
+              .to(film, { scale: 1, yPercent: 0, duration: 0.9, ease: "power3.out", overwrite: "auto" }, 0.38);
           });
 
           gsap.utils.toArray<HTMLElement>(".showcase-card").forEach((card) => {

@@ -88,11 +88,16 @@ export default function Home() {
                 <span>DB Experience</span>
                 <span>Experiências corporativas</span>
               </div>
-              <h1 id="hero-title" className="sr-only">A marca dá o tom. A experiência faz sentir.</h1>
+              <h1 id="hero-title" className="sr-only">Experiências corporativas que transformam a identidade da marca em algo que se sente.</h1>
               <div className="hero-scroll__moments">
                 {heroMoments.map((moment, index) => (
                   <div className="hero-scroll__moment" data-hero-chapter key={moment}>
-                    <p aria-hidden="true">{moment}</p>
+                    <p className="hero-scroll__statement" aria-hidden="true">{moment}</p>
+                    {index === 0 ? (
+                      <p className="hero-scroll__definition">
+                        Planejamento, produção, hospitalidade e execução de experiências corporativas construídas a partir da identidade de cada marca.
+                      </p>
+                    ) : null}
                     {index === heroMoments.length - 1 ? (
                       <a href="#contato" className="button hero-scroll__cta">
                         <span>Conversar sobre um projeto</span>
@@ -200,8 +205,9 @@ export default function Home() {
                   <p>Direção antes da chegada</p>
                 </article>
                 <article className="details__panel details__panel--reel">
-                  <div className="details__curtain" data-detail-curtain>
+                  <div className="details__curtain" data-detail-curtain data-feature-film>
                     <VerticalFilm src="/media/hero-production.mp4" poster="/media/hero-production-poster.jpg" label="Reel 01" caption="Bastidores reais" objectPosition="center 44%" className="details__film" ariaLabel="Reel 1 com bastidores da produção de uma experiência corporativa" />
+                    <span className="details__fabric" data-film-curtain aria-hidden="true" />
                   </div>
                   <p>O cuidado aparece no que o cliente nem precisa acompanhar</p>
                 </article>
@@ -210,8 +216,9 @@ export default function Home() {
                   <p>Cada lugar pede uma leitura</p>
                 </article>
                 <article className="details__panel details__panel--operation">
-                  <div className="details__curtain" data-detail-curtain>
+                  <div className="details__curtain" data-detail-curtain data-feature-film>
                     <VerticalFilm src="/media/manifesto-event.mp4" poster="/media/manifesto-event-poster.jpg" label="Operação" caption="Do primeiro contato ao último detalhe" objectPosition="center 44%" className="details__film" ariaLabel="Operação de uma experiência corporativa real" />
+                    <span className="details__fabric" data-film-curtain aria-hidden="true" />
                   </div>
                   <p>Ritmo, textura, hospitalidade e operação fazem parte da mesma decisão</p>
                 </article>

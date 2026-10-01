@@ -92,7 +92,7 @@ export function SiteHeader() {
     <header ref={header} className="site-header">
       <div className="site-header__inner">
         <Link
-          href="/"
+          href="/#conteudo"
           className="brand-signature brand-signature--header"
           aria-label="DB Experience, página inicial"
           onClick={() => setOpen(false)}
