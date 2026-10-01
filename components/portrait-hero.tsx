@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Allura } from "next/font/google";
 import { ArrowUpRight } from "lucide-react";
@@ -18,8 +18,8 @@ const signatureFont = Allura({
 });
 
 const impactLines = [
-  "",
-  "",
+  "Entendemos sua marca",
+  "Traduzimos em experiência",
 ];
 
 const upperPhrase = "Antes de produzir, precisamos entender.";
@@ -27,10 +27,120 @@ const lowerPhrase = "O cuidado transforma estratégia em experiência.";
 
 export function PortraitHero() {
   const root = useRef<HTMLElement>(null);
+  const vignette = useRef<HTMLDivElement>(null);
+  const vignetteStartedAt = useRef<number | null>(null);
   const [showProfessional, setShowProfessional] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [effectReady, setEffectReady] = useState(false);
+  const [vignetteLogoReady, setVignetteLogoReady] = useState(false);
+  const [showVignette, setShowVignette] = useState(true);
   const handleEffectReady = useCallback(() => setEffectReady(true), []);
+
+  useEffect(() => {
+    if (!showVignette) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [showVignette]);
+
+  useGSAP(
+    () => {
+      const overlay = vignette.current;
+      if (!overlay || !vignetteLogoReady) return;
+
+      vignetteStartedAt.current = performance.now();
+
+      const copy = overlay.querySelectorAll<HTMLElement>("[data-vignette-copy]");
+      const logo = overlay.querySelector<HTMLElement>("[data-vignette-logo]");
+      const logoCurtain = overlay.querySelector<HTMLElement>("[data-vignette-logo-curtain]");
+      const pieces = Array.from(overlay.querySelectorAll<HTMLElement>("[data-vignette-piece]"));
+      const sequence = overlay.querySelectorAll<HTMLElement>("[data-vignette-step]");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (reducedMotion) {
+        gsap.set([copy, logo, pieces, sequence], { autoAlpha: 1, clearProps: "transform" });
+        gsap.set(logoCurtain, { xPercent: 102 });
+        return;
+      }
+
+      const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
+      intro
+        .addLabel("assemble", 0)
+        .from(pieces[0], { xPercent: -190, rotation: -48, scale: 0.58, autoAlpha: 0, duration: 1.05 }, "assemble")
+        .from(pieces[1], { yPercent: -210, rotation: 72, scale: 0.52, autoAlpha: 0, duration: 1.12 }, "assemble+=0.05")
+        .from(pieces[2], { yPercent: 220, rotation: -64, scale: 0.55, autoAlpha: 0, duration: 1.18 }, "assemble+=0.08")
+        .from(pieces[3], { xPercent: 210, rotation: 54, scale: 0.6, autoAlpha: 0, duration: 1.08 }, "assemble+=0.12")
+        .from(logo, { scale: 0.94, duration: 0.46 }, "assemble+=0.18")
+        .to(logoCurtain, { xPercent: 102, duration: 0.82, ease: "power4.inOut" }, "assemble+=0.22")
+        .from(copy, { y: 22, autoAlpha: 0, duration: 0.62, stagger: 0.08 }, "assemble+=0.48")
+        .from(sequence, { scaleX: 0, autoAlpha: 0, duration: 0.46, stagger: 0.09, transformOrigin: "left center" }, "assemble+=0.72");
+
+      return () => {
+        intro.kill();
+      };
+    },
+    { scope: vignette, dependencies: [vignetteLogoReady], revertOnUpdate: true },
+  );
+
+  useGSAP(
+    () => {
+      const overlay = vignette.current;
+      if (!effectReady || !vignetteLogoReady || !showVignette || !overlay) return;
+
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const elapsed = performance.now() - (vignetteStartedAt.current ?? performance.now());
+      const minimumDisplay = Math.max(0, (1320 - elapsed) / 1000);
+      const copy = overlay.querySelectorAll<HTMLElement>("[data-vignette-copy]");
+      const logo = overlay.querySelector<HTMLElement>("[data-vignette-logo]");
+      const pieces = overlay.querySelectorAll<HTMLElement>("[data-vignette-piece]");
+      const panels = overlay.querySelectorAll<HTMLElement>("[data-vignette-panel]");
+      const headerLogo = document.querySelector<HTMLElement>(".brand-signature--header");
+
+      gsap.killTweensOf([copy, logo, pieces]);
+
+      if (reducedMotion) {
+        const hide = gsap.delayedCall(0, () => setShowVignette(false));
+        return () => hide.kill();
+      }
+
+      const logoBounds = logo?.getBoundingClientRect();
+      const headerBounds = headerLogo?.getBoundingClientRect();
+      const targetX = logoBounds && headerBounds
+        ? headerBounds.left + headerBounds.width / 2 - (logoBounds.left + logoBounds.width / 2)
+        : 0;
+      const targetY = logoBounds && headerBounds
+        ? headerBounds.top + headerBounds.height / 2 - (logoBounds.top + logoBounds.height / 2)
+        : -window.innerHeight * 0.42;
+      const targetScale = logoBounds && headerBounds ? headerBounds.width / logoBounds.width : 0.34;
+
+      const outro = gsap.timeline({
+        delay: minimumDisplay,
+        defaults: { ease: "power3.inOut" },
+        onComplete: () => setShowVignette(false),
+      });
+
+      outro
+        .addLabel("collapse", 0)
+        .to(copy, { y: -18, autoAlpha: 0, duration: 0.35, stagger: 0.035 }, "collapse")
+        .to(pieces, { x: 0, y: 0, scale: 0.18, rotation: 0, autoAlpha: 0, duration: 0.58, stagger: 0.03 }, "collapse")
+        .to(
+          logo,
+          { x: targetX, y: targetY, scale: targetScale, duration: 0.86, ease: "power4.inOut" },
+          "collapse+=0.06",
+        )
+        .addLabel("reveal", "collapse+=0.52")
+        .to(panels[0], { xPercent: -102, duration: 0.92, ease: "power4.inOut" }, "reveal")
+        .to(panels[1], { xPercent: 102, duration: 0.92, ease: "power4.inOut" }, "reveal")
+        .to(logo, { autoAlpha: 0, duration: 0.12 }, "reveal+=0.7");
+
+      return () => outro.kill();
+    },
+    { scope: vignette, dependencies: [effectReady, vignetteLogoReady, showVignette] },
+  );
 
   useGSAP(
     () => {
@@ -66,7 +176,7 @@ export function PortraitHero() {
           const finalScale = compact ? 0.68 : 0.4;
           let closingActive = false;
           const animatedElements = [frame, upperTrack, lowerTrack, signature];
-          const marquee = gsap.timeline({ repeat: -1 });
+          const marquee = gsap.timeline({ repeat: -1, paused: true });
 
           marquee
             .fromTo(
@@ -107,8 +217,6 @@ export function PortraitHero() {
             releaseWillChange();
           };
 
-          setWillChange();
-
           const timeline = gsap.timeline({
             defaults: { ease: "none" },
             scrollTrigger: {
@@ -120,8 +228,12 @@ export function PortraitHero() {
               scrub: 0.95,
               anticipatePin: 1,
               invalidateOnRefresh: true,
-              onEnter: resumeScene,
-              onEnterBack: resumeScene,
+              onEnter: () => {
+                if (closingActive) resumeScene();
+              },
+              onEnterBack: () => {
+                if (closingActive) resumeScene();
+              },
               onLeave: pauseScene,
               onLeaveBack: pauseScene,
               onUpdate: (self) => {
@@ -129,6 +241,8 @@ export function PortraitHero() {
                 if (nextClosingState === closingActive) return;
                 closingActive = nextClosingState;
                 setIsClosing(nextClosingState);
+                if (nextClosingState) resumeScene();
+                else pauseScene();
               },
             },
           });
@@ -183,11 +297,69 @@ export function PortraitHero() {
     <section
       ref={root}
       className="portrait-hero"
-      data-revealed="true"
+      data-revealed={!showVignette}
       data-portrait-hero
       data-cursor="REVELAR"
       aria-labelledby="hero-title"
     >
+      {showVignette && (
+        <div
+          ref={vignette}
+          className="portrait-vignette"
+          role="status"
+          aria-live="polite"
+          aria-label="Preparando a experiência Dany Brandão"
+          data-logo-ready={vignetteLogoReady}
+        >
+          <div className="portrait-vignette__panel portrait-vignette__panel--left" data-vignette-panel aria-hidden="true" />
+          <div className="portrait-vignette__panel portrait-vignette__panel--right" data-vignette-panel aria-hidden="true" />
+
+          <div className="portrait-vignette__pieces" aria-hidden="true">
+            <i className="portrait-vignette__piece portrait-vignette__piece--d" data-vignette-piece />
+            <i className="portrait-vignette__piece portrait-vignette__piece--triangle" data-vignette-piece />
+            <i className="portrait-vignette__piece portrait-vignette__piece--base" data-vignette-piece />
+            <i className="portrait-vignette__piece portrait-vignette__piece--n" data-vignette-piece />
+          </div>
+
+          <div className="portrait-vignette__top" data-vignette-copy>
+            <span>DB Experience</span>
+            <span>Da estratégia à entrega</span>
+          </div>
+
+          <div className="portrait-vignette__lockup">
+            <div className="portrait-vignette__logo" data-vignette-logo>
+              <Image
+                src="/images/Logo_Fundo_Branco-removebg-preview.png"
+                alt="Dany Brandão"
+                width={547}
+                height={184}
+                className="portrait-vignette__logo-image"
+                preload
+                onLoad={(event) => {
+                  void event.currentTarget
+                    .decode()
+                    .catch(() => undefined)
+                    .finally(() => setVignetteLogoReady(true));
+                }}
+                onError={() => setVignetteLogoReady(true)}
+              />
+              <span className="portrait-vignette__logo-curtain" data-vignette-logo-curtain aria-hidden="true" />
+            </div>
+            <p className="portrait-vignette__promise" data-vignette-copy>
+              Entender a marca para dar forma à experiência.
+            </p>
+          </div>
+
+          <div className="portrait-vignette__sequence" data-vignette-copy aria-hidden="true">
+            <span data-vignette-step>Entender</span>
+            <i data-vignette-step />
+            <span data-vignette-step>Planejar</span>
+            <i data-vignette-step />
+            <span data-vignette-step>Realizar</span>
+          </div>
+        </div>
+      )}
+
       <div className="portrait-hero__closing" data-hero-closing aria-hidden="true">
         <p className="portrait-hero__closing-label">Dany Brandão / experiências que fazem sentido</p>
 
@@ -207,12 +379,13 @@ export function PortraitHero() {
         </div>
       </div>
 
-      <div className="portrait-hero__frame" data-hero-frame data-effect-ready={effectReady}>
+      <div className="portrait-hero__frame" data-hero-frame data-effect-ready={effectReady} inert={showVignette}>
         <LorenzoInteractivePortrait
           revealImageUrl="/images/Dany Profissional.png"
           forceReveal={showProfessional || isClosing}
           imageTargetSelector="[data-portrait-stage]"
           imageOffsetY={0.012}
+          active={!showVignette}
           onReady={handleEffectReady}
         />
 
@@ -234,8 +407,8 @@ export function PortraitHero() {
 
             <div className="portrait-hero__intro">
               <p>
-                <strong>Experiências corporativas, do briefing à execução</strong>
-                <span>Dany planeja, produz e coordena cada etapa para a marca receber seus convidados com tranquilidade</span>
+                <strong>Experiências corporativas, da estratégia à execução.</strong>
+                <span>Dany entende produto, público e contexto para criar experiências coerentes com cada marca.</span>
               </p>
               <a href="#contato" className="button portrait-hero__cta">
                 <span>Conversar sobre um projeto</span>
@@ -270,17 +443,7 @@ export function PortraitHero() {
                 />
               </div>
 
-              <div className="portrait-hero__fallback" aria-hidden="true">
-                <Image
-                  src="/images/Dany Profissional.png"
-                  alt=""
-                  fill
-                  sizes="(max-width: 1023px) 94vw, 48vw"
-                  className="portrait-hero__fallback-photo"
-                  loading="eager"
-                  unoptimized
-                />
-              </div>
+              <div className="portrait-hero__fallback" aria-hidden="true" />
 
               <span className="portrait-hero__mode portrait-hero__mode--casual" aria-hidden="true">Dany / casual</span>
               <span className="portrait-hero__mode portrait-hero__mode--professional" aria-hidden="true">Dany / profissional</span>

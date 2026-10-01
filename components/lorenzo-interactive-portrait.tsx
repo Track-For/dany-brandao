@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import * as THREE from "three";
@@ -10,6 +10,7 @@ type LorenzoInteractivePortraitProps = {
   forceReveal?: boolean;
   imageTargetSelector?: string;
   imageOffsetY?: number;
+  active?: boolean;
   onReady?: () => void;
 };
 
@@ -261,11 +262,17 @@ export function LorenzoInteractivePortrait({
   forceReveal = false,
   imageTargetSelector,
   imageOffsetY = 0,
+  active = true,
   onReady,
 }: LorenzoInteractivePortraitProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const revealUniformRef = useRef<RevealUniform | null>(null);
   const initialForceReveal = useRef(forceReveal);
+  const activeRef = useRef(active);
+
+  useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
 
   useGSAP(
     () => {
@@ -482,6 +489,7 @@ export function LorenzoInteractivePortrait({
       animationFrame = window.requestAnimationFrame(animate);
       const delta = clock.getDelta();
       if (!isVisible) return;
+      if (textureReady && didNotifyReady && !activeRef.current) return;
 
       shared.time.value += delta;
       shared.dTime.value = delta;
