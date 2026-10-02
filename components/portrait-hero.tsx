@@ -4,6 +4,8 @@ import { useCallback, useState } from "react";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { LorenzoInteractivePortrait } from "@/components/lorenzo-interactive-portrait";
+import danyCasual from "@/public/images/Dany casual.png";
+import danyProfessional from "@/public/images/Dany profissional.png";
 
 const identities = [
   {
@@ -71,14 +73,15 @@ export function PortraitHero() {
         <figure className="dany-essence__portrait" data-effect-ready={effectReady}>
           <div className="dany-essence__stage" data-portrait-stage>
             <Image
-              src="/images/Dany casual.png"
+              src={danyCasual}
               alt="Dany Brandão em um retrato casual"
               fill
+              loading="eager"
               sizes="(max-width: 767px) 94vw, 48vw"
               className="dany-essence__photo"
             />
             <LorenzoInteractivePortrait
-              revealImageUrl="/images/Dany profissional.png"
+              revealImageUrl={danyProfessional.src}
               forceReveal={showProfessional}
               imageTargetSelector="[data-portrait-stage]"
               imageOffsetY={0.096}

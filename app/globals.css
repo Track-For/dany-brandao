@@ -842,7 +842,8 @@ h1, h2, h3,
   .partners__rows { margin-top: 2.25rem; }
   .partner-card { min-height: 124px; }
 
-  .language-panel--classic h2 { top: 15dvh; font-size: clamp(3.8rem, 6.2vw, 5.8rem); }
+  .language-panel__index { top: calc(var(--header-height) + 0.85rem); }
+  .language-panel--classic h2 { top: calc(var(--header-height) + 2.65rem); width: 52vw; font-size: clamp(3.8rem, 6.2vw, 5.8rem); }
   .language-panel__lead { bottom: 6dvh; }
   .language-panel__classic-media { bottom: 6dvh; height: 58dvh; }
   .language-panel--transform h3 { top: 15dvh; font-size: clamp(3.8rem, 6vw, 5.6rem); }
