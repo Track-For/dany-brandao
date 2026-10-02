@@ -22,7 +22,10 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
       let ticker: ((time: number) => void) | null = null;
       let heroVideo: HTMLVideoElement | null = null;
       let syncHeroVideo: (() => void) | null = null;
+      let handleHeroMetadata: (() => void) | null = null;
+      let handleHeroSeeked: (() => void) | null = null;
       let heroSeekFrame: number | null = null;
+      let heroSeeking = false;
       const interactionCleanups: Array<() => void> = [];
 
       if (!reducedMotion && pointerFine && window.innerWidth >= 1024) {
@@ -39,6 +42,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
         const heroChapters = gsap.utils.toArray<HTMLElement>("[data-hero-chapter]");
         const heroProgress = gsap.utils.toArray<HTMLElement>("[data-hero-progress] i");
         const heroVeil = document.querySelector<HTMLElement>("[data-hero-veil]");
+        const heroCurrent = document.querySelector<HTMLElement>("[data-hero-current]");
         if (hero && heroVideo && heroChapters.length) {
           const duration = Number(hero.dataset.heroDuration) || 4.58;
           const framesPerSecond = Number(hero.dataset.heroFps) || 24;
@@ -49,20 +53,29 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
             if (!heroVideo || heroVideo.readyState < 1) return;
             const clampedTime = Math.min(Math.max(0, playhead.time), Math.max(0, heroVideo.duration - frameDuration));
             targetTime = Math.round(clampedTime * framesPerSecond) / framesPerSecond;
-            if (heroSeekFrame !== null) return;
+            if (heroSeeking || heroSeekFrame !== null) return;
 
             heroSeekFrame = window.requestAnimationFrame(() => {
               heroSeekFrame = null;
-              if (!heroVideo || heroVideo.readyState < 1) return;
+              if (!heroVideo || heroVideo.readyState < 1 || heroSeeking) return;
               if (Math.abs(heroVideo.currentTime - targetTime) >= frameDuration * 0.5) {
+                heroSeeking = true;
                 heroVideo.currentTime = targetTime;
               }
             });
           };
 
+          handleHeroMetadata = () => {
+            heroVideo?.pause();
+            syncHeroVideo?.();
+          };
+          handleHeroSeeked = () => {
+            heroSeeking = false;
+            syncHeroVideo?.();
+          };
           heroVideo.pause();
-          heroVideo.addEventListener("loadedmetadata", syncHeroVideo);
-          heroVideo.addEventListener("seeked", syncHeroVideo);
+          heroVideo.addEventListener("loadedmetadata", handleHeroMetadata);
+          heroVideo.addEventListener("seeked", handleHeroSeeked);
           gsap.set(heroChapters, { y: 32, autoAlpha: 0 });
           gsap.set(heroChapters[0], { y: 0, autoAlpha: 1 });
           gsap.set(heroProgress, { scaleX: 0 });
@@ -72,17 +85,20 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
             scrollTrigger: {
               trigger: hero,
               start: "top top",
-              end: () => `+=${Math.max(window.innerHeight, hero.offsetHeight - window.innerHeight * 2)}`,
-              scrub: 0.12,
+              end: () => `+=${Math.max(window.innerHeight, hero.offsetHeight - window.innerHeight)}`,
+              scrub: 0.3,
               invalidateOnRefresh: true,
               onEnter: () => heroVideo?.pause(),
               onEnterBack: () => heroVideo?.pause(),
+              onUpdate: (self) => {
+                if (!heroCurrent) return;
+                const active = Math.min(heroChapters.length - 1, Math.floor(self.progress * heroChapters.length));
+                heroCurrent.textContent = String(active + 1).padStart(2, "0");
+              },
             },
           });
 
-          heroTimeline
-            .to(playhead, { time: duration, duration: timelineDuration, ease: "none", onUpdate: syncHeroVideo }, 0)
-            .to(heroVideo, { scale: 1, duration: timelineDuration, ease: "none" }, 0);
+          heroTimeline.to(playhead, { time: duration, duration: timelineDuration, ease: "none", onUpdate: syncHeroVideo }, 0);
           if (heroVeil) heroTimeline.to(heroVeil, { opacity: 0.72, duration: timelineDuration, ease: "none" }, 0);
 
           heroProgress.forEach((bar, index) => {
@@ -99,7 +115,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
         }
 
         const sectionTitles = gsap.utils.toArray<HTMLElement>(
-          ".partners__header h2, .details__header h2, .showcase__header h2, .system h2, .about__copy h2, .contact__headline h2, [data-title-reveal]",
+          ".partners__header h2, .details__header h2, .showcase__header h2, .system h2, .about__copy h2, .dany-essence__copy h2, .contact__headline h2, [data-title-reveal]",
         );
         sectionTitles.forEach((title) => {
           gsap.fromTo(title, { yPercent: 24, clipPath: "inset(0 0 100% 0)", autoAlpha: 0 }, { yPercent: 0, clipPath: "inset(0 0 0% 0)", autoAlpha: 1, duration: 1.05, ease: "power4.out", scrollTrigger: { trigger: title, start: "top 88%", once: true } });
@@ -598,10 +614,8 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
       return () => {
         anchorLinks.forEach((link) => link.removeEventListener("click", handleAnchor));
         interactionCleanups.forEach((cleanup) => cleanup());
-        if (heroVideo && syncHeroVideo) {
-          heroVideo.removeEventListener("loadedmetadata", syncHeroVideo);
-          heroVideo.removeEventListener("seeked", syncHeroVideo);
-        }
+        if (heroVideo && handleHeroMetadata) heroVideo.removeEventListener("loadedmetadata", handleHeroMetadata);
+        if (heroVideo && handleHeroSeeked) heroVideo.removeEventListener("seeked", handleHeroSeeked);
         if (heroSeekFrame !== null) window.cancelAnimationFrame(heroSeekFrame);
         responsive.revert();
         if (ticker) gsap.ticker.remove(ticker);

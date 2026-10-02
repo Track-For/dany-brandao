@@ -26,6 +26,29 @@ const showcases = [
 const systemSteps = ["Briefing", "RSVP", "Fornecedores", "Credenciamento", "Hospitalidade", "Logística", "Produção", "Execução"];
 const complexity = ["RSVP", "Logística", "Produção", "Montagem", "Credenciamento", "Fornecedores", "Cronograma", "Hospitalidade", "Operação", "Imprevistos"];
 
+const heroMoments = [
+  {
+    title: "Sua marca ganha vida",
+    copy: "Criamos experiências corporativas que envolvem pessoas, fortalecem vínculos e fazem sua mensagem continuar depois do encontro",
+  },
+  {
+    title: "Tudo começa pela escuta",
+    copy: "Entendemos objetivo, público e contexto para transformar intenção em uma experiência que realmente faça sentido",
+  },
+  {
+    title: "A complexidade fica com a gente",
+    copy: "Estratégia, fornecedores, logística e execução coordenados para sua equipe ter clareza, segurança e tranquilidade",
+  },
+  {
+    title: "Cada pessoa se sente parte",
+    copy: "Hospitalidade e atenção aos detalhes criam conexão, pertencimento e uma percepção mais forte da sua marca",
+  },
+  {
+    title: "Sua intenção chega inteira",
+    copy: "Do briefing ao último detalhe, entregamos uma experiência coerente, precisa e memorável",
+  },
+];
+
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": ["Organization", "ProfessionalService"],
@@ -42,7 +65,60 @@ export default function Home() {
       <SiteHeader />
       <SmoothExperience>
         <main id="conteudo">
-          <PortraitHero />
+          <section
+            className="hero-scroll"
+            data-hero-section
+            data-hero-duration="14"
+            data-hero-fps="24"
+            aria-labelledby="hero-title"
+          >
+            <div className="hero-scroll__pin" data-hero-pin>
+              <video
+                className="hero-scroll__video"
+                data-hero-video
+                muted
+                playsInline
+                preload="auto"
+                poster="/videos/video-higgsfield-hero-poster.jpg"
+                aria-hidden="true"
+                tabIndex={-1}
+              >
+                <source src="/videos/hf_20261002_122140_d005c83f-hero-intra.mp4" type='video/mp4; codecs="avc1.640029"' />
+                <source src="/videos/hf_20261002_122140_d005c83f-59a1-40c4-b3b1-ec67ec1f66d6.mp4" type='video/mp4; codecs="hvc1"' />
+              </video>
+
+              <div className="hero-scroll__veil" data-hero-veil aria-hidden="true" />
+              <div className="hero-scroll__grain" aria-hidden="true" />
+              <div className="hero-scroll__chrome" aria-hidden="true">
+                <span>DB Experience</span>
+                <span>Estratégia à entrega</span>
+              </div>
+
+              <div className="hero-scroll__moments">
+                {heroMoments.map((moment, index) => (
+                  <article className="hero-scroll__moment" data-hero-chapter key={moment.title}>
+                    {index === 0 ? (
+                      <h1 id="hero-title" className="hero-scroll__statement">{moment.title}</h1>
+                    ) : (
+                      <h2 className="hero-scroll__statement">{moment.title}</h2>
+                    )}
+                    <p className="hero-scroll__definition">{moment.copy}</p>
+                    {index === heroMoments.length - 1 ? (
+                      <a href="#contato" className="button hero-scroll__cta">
+                        <span>Conversar sobre um projeto</span>
+                        <ArrowUpRight aria-hidden="true" size={17} />
+                      </a>
+                    ) : null}
+                  </article>
+                ))}
+              </div>
+
+              <p className="hero-scroll__counter" aria-hidden="true">
+                <span data-hero-current>01</span>
+                <span>05</span>
+              </p>
+            </div>
+          </section>
 
           <section className="language" id="linguagens" data-language-section aria-labelledby="language-title">
             <div className="language__pin" data-language-pin>
@@ -162,7 +238,7 @@ export default function Home() {
             <div className="manifesto__pin" data-manifesto-pin><VerticalFilm src="/media/manifesto-event.mp4" poster="/media/manifesto-event-poster.jpg" objectPosition="center 44%" className="manifesto__film" ariaLabel="Recepção e bastidores de uma experiência corporativa real" /><div className="manifesto__overlay" /><div className="container manifesto__copy"><h2 id="manifesto-title"><span data-manifesto-line>Você não precisa pensar em cada detalhe</span><span data-manifesto-line>Nós pensamos por você</span></h2></div></div>
           </section>
 
-          <section className="about" id="sobre" aria-labelledby="about-title"><div className="container about__layout"><figure className="about__portrait" data-about-image data-cursor="DETAIL"><Image src="/media/Mood do sábado à noite... Gastronomia coreana adaptado para o Brasil ministrado pelo mestre _pauloshin. Uma experiência de mesas com grelhas embutidas. E(.jpg.jpeg" alt="Dany Brandão acompanhando pessoalmente uma experiência" fill sizes="(max-width: 1023px) 100vw, 42vw" className="cover-image" /><span className="about__shape about__shape--one" aria-hidden="true" /><span className="about__shape about__shape--two" aria-hidden="true" /></figure><div className="about__copy"><p className="section-label">Sobre Dany</p><h2 id="about-title">Um olhar treinado para perceber o que muitas vezes passa despercebido</h2><p data-reveal>A trajetória de Dany no universo artístico desenvolveu sensibilidade para estética, comportamento, presença e experiência</p><p data-reveal>Hoje, esse olhar se combina com planejamento, produção e operação na criação de experiências corporativas coerentes com cada marca</p><a className="about__social" href="https://www.linkedin.com/in/dany-brandão-b10a5ab7/" target="_blank" rel="noreferrer"><span className="about__social-mark" aria-hidden="true">in</span><span>Conhecer o LinkedIn da Dany</span><ArrowUpRight aria-hidden="true" size={16} /></a></div></div></section>
+          <PortraitHero />
 
           <section className="contact" id="contato" aria-labelledby="contact-title">
             <div className="container contact__headline"><p className="section-label">Uma conversa é o primeiro passo</p><h2 id="contact-title">Sua marca já tem uma identidade. Nosso trabalho é fazer as pessoas sentirem isso</h2><p>Conte o que você está planejando. O restante começa com uma conversa</p></div>
