@@ -4,8 +4,8 @@ import { useCallback, useState } from "react";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { LorenzoInteractivePortrait } from "@/components/lorenzo-interactive-portrait";
-import danyCasual from "@/public/images/Dany casual.png";
-import danyProfessional from "@/public/images/Dany profissional.png";
+import danyCasual from "@/public/images/dany-casual.png";
+import danyProfessional from "@/public/images/dany-profissional.png";
 
 const identities = [
   {
