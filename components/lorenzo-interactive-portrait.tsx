@@ -298,6 +298,7 @@ export function LorenzoInteractivePortrait({
     let width = Math.max(1, container.clientWidth);
     let height = Math.max(1, container.clientHeight);
     const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const shared = {
       time: { value: 0 },
       dTime: { value: 0 },
@@ -343,9 +344,9 @@ export function LorenzoInteractivePortrait({
         texBlob: { value: blob.output.texture },
         time: shared.time,
         fullReveal,
-        colorBg: { value: new THREE.Vector3(0.635, 0.855, 0.859) },
-        colorSoftShape: { value: new THREE.Vector3(0.941, 0.922, 0.882) },
-        colorLine: { value: new THREE.Vector3(0.933, 0.239, 0.588) },
+        colorBg: { value: new THREE.Vector3(0.965, 0.945, 0.925) },
+        colorSoftShape: { value: new THREE.Vector3(0.965, 0.945, 0.925) },
+        colorLine: { value: new THREE.Vector3(0.706, 0.239, 0.408) },
       },
       vertexShader: revealVertexShader,
       fragmentShader: textureFragmentShader,
@@ -421,7 +422,6 @@ export function LorenzoInteractivePortrait({
     const manualPointer = new THREE.Vector2();
     const autoFrom = new THREE.Vector2();
     const autoTarget = new THREE.Vector2();
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let pointerInside = false;
     let autoStart = performance.now();
     let autoDuration = 3200;
@@ -483,11 +483,13 @@ export function LorenzoInteractivePortrait({
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
 
-    const clock = new THREE.Clock();
+    const timer = new THREE.Timer();
+    timer.connect(document);
     let animationFrame = 0;
-    const animate = () => {
+    const animate = (timestamp: number) => {
       animationFrame = window.requestAnimationFrame(animate);
-      const delta = clock.getDelta();
+      timer.update(timestamp);
+      const delta = timer.getDelta();
       if (!isVisible) return;
       if (textureReady && didNotifyReady && !activeRef.current) return;
 
@@ -522,11 +524,12 @@ export function LorenzoInteractivePortrait({
         });
       }
     };
-    animate();
+    animationFrame = window.requestAnimationFrame(animate);
 
     return () => {
       disposed = true;
       window.cancelAnimationFrame(animationFrame);
+      timer.dispose();
       visibilityObserver.disconnect();
       resizeObserver.disconnect();
       interactionTarget.removeEventListener("pointerenter", updatePointer);

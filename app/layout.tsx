@@ -1,5 +1,28 @@
 import type { Metadata, Viewport } from "next";
+import { DM_Mono, DM_Sans, Newsreader } from "next/font/google";
+import { CookieConsent } from "@/components/cookie-consent";
 import "./globals.css";
+
+const bodyFont = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const displayFont = Newsreader({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const utilityFont = DM_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-utility",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -27,8 +50,8 @@ export const metadata: Metadata = {
       "A marca, traduzida em experiência. Estratégia, hospitalidade, produção e execução em São Paulo.",
   },
   icons: {
-    icon: [{ url: "/images/Logo_Fundo_Branco-removebg-preview.png", type: "image/png" }],
-    shortcut: ["/images/Logo_Fundo_Branco-removebg-preview.png"],
+    icon: [{ url: "/images/Logo_Rosa_Fundo_Branco-removebg-preview.png", type: "image/png" }],
+    shortcut: ["/images/Logo_Rosa_Fundo_Branco-removebg-preview.png"],
   },
   robots: {
     index: true,
@@ -37,13 +60,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#418A90",
-  colorScheme: "light dark",
+  themeColor: "#F6F1EC",
+  colorScheme: "light",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={`${bodyFont.variable} ${displayFont.variable} ${utilityFont.variable}`}>
       <head>
         <link
           rel="preload"
@@ -53,7 +76,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           fetchPriority="high"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <CookieConsent />
+      </body>
     </html>
   );
 }

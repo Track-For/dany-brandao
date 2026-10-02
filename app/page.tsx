@@ -9,7 +9,7 @@ import { VerticalFilm } from "@/components/vertical-film";
 import { PortraitHero } from "@/components/portrait-hero";
 
 const method = [
-  { number: "01", title: "Marca", copy: "O que precisa permanecer reconhecível em qualquer expressão dessa empresa?", image: "/images/Logo_Fundo_Branco-removebg-preview.png", alt: "Assinatura colorida da marca Dany Brandão", logo: true },
+  { number: "01", title: "Marca", copy: "O que precisa permanecer reconhecível em qualquer expressão dessa empresa?", image: "/images/Logo_Rosa_Fundo_Branco-removebg-preview.png", alt: "Assinatura rosa da marca Dany Brandão", logo: true },
   { number: "02", title: "Produto", copy: "O que está sendo apresentado, celebrado ou comunicado?", image: "/media/detail-material.jpg", alt: "Equipamentos e materiais preparados para uma experiência" },
   { number: "03", title: "Público", copy: "Quem estará presente e o que essas pessoas precisam perceber?", image: "/media/detail-arrival.jpg", alt: "Equipe recebendo convidados em um evento corporativo" },
   { number: "04", title: "Contexto", copy: "Por que esse encontro existe e que momento da marca ele representa?", image: "/media/crachas.png", alt: "Detalhe arquitetônico observado durante a preparação de um evento" },
@@ -21,25 +21,6 @@ const showcases = [
   { number: "01 / 03", title: "Jantar executivo", image: "/images/jantar.png", alt: "Convidados reunidos em um jantar executivo", scope: ["Hospitality", "Guest flow", "Production"] },
   { number: "02 / 03", title: "Plenária corporativa", image: "/images/project-plenary.png", alt: "Plenária corporativa pronta para receber o público", scope: ["Stage", "Content", "Operation"] },
   { number: "03 / 03", title: "Recepção e RSVP", image: "/images/project-rsvp.png", alt: "Equipe organizando recepção e credenciamento", scope: ["RSVP", "Reception", "Detail"] },
-];
-
-const partnerRows = [
-  [
-    { number: "01", segment: "Tecnologia", tone: "teal" },
-    { number: "02", segment: "Saúde", tone: "aqua" },
-    { number: "03", segment: "Educação", tone: "cream" },
-    { number: "04", segment: "Cultura", tone: "pink" },
-    { number: "05", segment: "Mobilidade", tone: "blue" },
-    { number: "06", segment: "Serviços", tone: "yellow" },
-  ],
-  [
-    { number: "07", segment: "Hospitalidade", tone: "yellow" },
-    { number: "08", segment: "Indústria", tone: "blue" },
-    { number: "09", segment: "Varejo", tone: "pink" },
-    { number: "10", segment: "Bem-estar", tone: "cream" },
-    { number: "11", segment: "Finanças", tone: "aqua" },
-    { number: "12", segment: "Lifestyle", tone: "teal" },
-  ],
 ];
 
 const systemSteps = ["Briefing", "RSVP", "Fornecedores", "Credenciamento", "Hospitalidade", "Logística", "Produção", "Execução"];
@@ -62,23 +43,6 @@ export default function Home() {
       <SmoothExperience>
         <main id="conteudo">
           <PortraitHero />
-
-          {/* <section className="partners" id="parceiros" data-partners-section aria-labelledby="partners-title">
-            <header className="container partners__header"><h2 id="partners-title">Parcerias também constroem a experiência</h2><p>Um espaço preparado para receber as marcas parceiras da DB. As identidades abaixo são provisórias</p></header>
-            <div className="partners__rows" aria-label="Espaços provisórios para marcas parceiras">
-              {partnerRows.map((row, rowIndex) => (
-                <div className="partners__rail" key={`row-${rowIndex}`}>
-                  <div className="partners__track" data-partners-track data-direction={rowIndex === 0 ? "right" : "left"}>
-                    {[...row, ...row].map((partner, index) => (
-                      <article className={`partner-card partner-card--${partner.tone}`} key={`${partner.number}-${index}`} aria-hidden={index >= row.length}>
-                        <span className="partner-card__mark" aria-hidden="true" /><div><strong>Parceiro {partner.number}</strong><span>{partner.segment}</span></div><span className="partner-card__index">P/{partner.number}</span>
-                      </article>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section> */}
 
           <section className="language" id="linguagens" data-language-section aria-labelledby="language-title">
             <div className="language__pin" data-language-pin>
@@ -191,7 +155,7 @@ export default function Home() {
           <section className="system" aria-labelledby="system-title"><div className="container system__layout"><div><p className="section-label">Visão 360°</p><h2 id="system-title">Enquanto o convidado vê o evento, nós vemos todo o sistema</h2></div><div className="system__orbit" data-system-orbit aria-label="Etapas coordenadas pela DB Experience"><div className="system__orbit-scene" aria-hidden="true"><span className="system__ring system__ring--outer" data-system-ring /><span className="system__ring system__ring--middle" data-system-ring /><span className="system__ring system__ring--inner" data-system-ring /></div><span className="system__core" data-system-core><span className="system__center">Uma experiência</span></span>{systemSteps.map((step, index) => <span className={`system__step system__step--${index + 1}`} data-system-step data-orbit={index % 3} key={step}>{step}</span>)}</div></div></section>
 
           <section className="complexity" data-complexity-section aria-labelledby="complexity-title">
-            <div className="complexity__pin" data-complexity-pin><p className="section-label">O que você não precisa ver</p><h2 id="complexity-title" className="sr-only">Da complexidade à tranquilidade</h2><div className="complexity__words" aria-hidden="true">{complexity.map((word, index) => <span className={`complexity__word complexity__word--${index + 1}`} key={word} data-complexity-word>{word}</span>)}</div><p className="complexity__result" data-complexity-result>Entregamos Tranquilidade</p><p className="complexity__explain">A DB organiza a complexidade para o cliente viver apenas o que importa</p></div>
+            <div className="complexity__pin" data-complexity-pin><p className="section-label">O que você não precisa ver</p><h2 id="complexity-title" className="sr-only">A DB assume a complexidade</h2><div className="complexity__words" aria-hidden="true">{complexity.map((word, index) => <span className={`complexity__word complexity__word--${index + 1}`} key={word} data-complexity-word>{word}</span>)}</div><p className="complexity__result" data-complexity-result>Assumimos a complexidade</p><p className="complexity__explain">A DB coordena cada frente para o cliente manter o foco no que realmente importa</p></div>
           </section>
 
           <section className="manifesto" data-manifesto-section aria-labelledby="manifesto-title">
@@ -206,7 +170,7 @@ export default function Home() {
           </section>
         </main>
 
-        <footer className="footer"><div className="container footer__top"><Link href="/" className="brand-signature" aria-label="Dany Brandão, página inicial"><Image src="/images/Logo_Fundo_Branco-removebg-preview.png" alt="Dany Brandão" width={547} height={184} /></Link><p>DB Experience<br />Corporate Experiences<br />São Paulo</p><div className="footer__contacts"><a href="mailto:atendimento@danybrandao.com.br">atendimento@danybrandao.com.br</a><a href="tel:+5511981614592">11 98161-4592</a></div><a className="text-link footer__linkedin" href="https://www.linkedin.com/in/dany-brandão-b10a5ab7/" target="_blank" rel="noreferrer"><span>LinkedIn</span><ArrowUpRight aria-hidden="true" size={16} /></a></div><div className="container footer__bottom"><span>© {new Date().getFullYear()} Dany Brandão</span><span>D.B EXPERIENCE SERVICOS LTDA · CNPJ 16.509.773/0001-38</span><span>Privacidade e discrição por princípio</span></div></footer>
+        <footer className="footer"><div className="container footer__top"><Link href="/" className="brand-signature" aria-label="Dany Brandão, página inicial"><Image src="/images/Logo_Preta-removebg-preview.png" alt="Dany Brandão" width={787} height={251} /></Link><p>DB Experience<br />Corporate Experiences<br />São Paulo</p></div><div className="container footer__bottom"><span>© {new Date().getFullYear()} Dany Brandão</span><span>D.B EXPERIENCE SERVICOS LTDA · CNPJ 16.509.773/0001-38</span><span>Privacidade e discrição por princípio</span></div></footer>
       </SmoothExperience>
     </>
   );

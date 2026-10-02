@@ -264,7 +264,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
             if (current) current.textContent = String(index + 1).padStart(2, "0");
             if (currentTitle) {
               currentTitle.textContent = chapters[index]?.querySelector("h3")?.textContent ?? "";
-              currentTitle.style.color = index >= 4 ? "#ee3d96" : "";
+              currentTitle.style.color = index >= 4 ? "#b43d68" : "";
             }
             if (mobileProgress) gsap.to(mobileProgress, { scaleY: (index + 1) / chapters.length, duration: 0.35, overwrite: true });
           };
@@ -457,8 +457,8 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
               const flightX = () => sourceX(index) + (targetX(index) - sourceX(index)) * (isMobile ? 0.46 : 0.16) + direction * (isMobile ? 6 : 22);
               const flightY = () => sourceY(index) + (targetY(index) - sourceY(index)) * (isMobile ? 0.48 : 0.12) + (isMobile ? 18 : -28);
               handoffTimeline
-                .fromTo(handoffWords[index], { x: () => sourceX(index), y: () => sourceY(index), scale: () => sourceScale(index), rotation: 0, color: "#f0ebe1", force3D: false }, { x: flightX, y: flightY, scale: flightScale, rotation: 0, duration: isMobile ? 0.34 : 0.24, ease: "power2.out", force3D: false }, offset)
-                .to(handoffWords[index], { x: () => targetX(index), y: () => targetY(index), scale: () => targetScale(index), rotation: 0, color: "#418a90", duration: isMobile ? 0.66 : 0.76, ease: "power3.inOut", force3D: false }, offset + (isMobile ? 0.34 : 0.24));
+                .fromTo(handoffWords[index], { x: () => sourceX(index), y: () => sourceY(index), scale: () => sourceScale(index), rotation: 0, color: "#f6f1ec", force3D: false }, { x: flightX, y: flightY, scale: flightScale, rotation: 0, duration: isMobile ? 0.34 : 0.24, ease: "power2.out", force3D: false }, offset)
+                .to(handoffWords[index], { x: () => targetX(index), y: () => targetY(index), scale: () => targetScale(index), rotation: 0, color: "#171316", duration: isMobile ? 0.66 : 0.76, ease: "power3.inOut", force3D: false }, offset + (isMobile ? 0.34 : 0.24));
             });
 
             interactionCleanups.push(() => {
@@ -472,7 +472,7 @@ export function SmoothExperience({ children }: SmoothExperienceProps) {
           const assembledY = (index: number) => usesHandoffLayer ? window.innerHeight / 2 - animatedComplexityWords[index].offsetHeight / 2 : 0;
           gsap.timeline({ scrollTrigger: { trigger: complexity, start: "top top", end: "bottom bottom", scrub: isMobile ? 0.35 : 0.75, invalidateOnRefresh: true } })
             .to(pause, { progress: 1, duration: 0.34, ease: "none" })
-            .to(animatedComplexityWords, { x: assembledX, y: assembledY, rotate: 0, scale: 0.82, color: "#418a90", duration: 0.68, stagger: 0.018, ease: "power2.inOut", force3D: false })
+            .to(animatedComplexityWords, { x: assembledX, y: assembledY, rotate: 0, scale: 0.82, color: "#171316", duration: 0.68, stagger: 0.018, ease: "power2.inOut", force3D: false })
             .to(pause, { progress: 2, duration: 0.18, ease: "none" })
             .to(animatedComplexityWords, { scale: 0.08, autoAlpha: 0, duration: 0.3, stagger: 0.012, ease: "power3.in", force3D: false })
             .fromTo(complexityResult, { scale: 0.82, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.3, ease: "power3.out" }, "-=0.04");

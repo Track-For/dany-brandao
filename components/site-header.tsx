@@ -100,8 +100,8 @@ export function SiteHeader() {
           <Image
             src="/images/Logo_Fundo_Branco-removebg-preview.png"
             alt="Dany Brandão"
-            width={547}
-            height={184}
+            width={787}
+            height={251}
             preload
           />
         </Link>
