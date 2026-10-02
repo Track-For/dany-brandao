@@ -84,7 +84,7 @@ export function PortraitHero() {
               revealImageUrl={danyProfessional.src}
               forceReveal={showProfessional}
               imageTargetSelector="[data-portrait-stage]"
-              imageOffsetY={0.096}
+              imageOffsetY={0.04}
               onReady={handleEffectReady}
             />
           </div>
